@@ -126,7 +126,7 @@
                 </div>
             </section>
 
-            <!-- ПРАВАЯ КОЛОНКА (Чарлист по официальному шаблону или Панель Мастера) -->
+            <!-- ПРАВАЯ КОЛОНКА (Чарлист или Панель Мастера) -->
             <section class="lg:col-span-5 flex flex-col gap-4 h-full overflow-hidden">
                 <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden">
                     <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    <!-- ИГРОК: Официальный Чарлист (стр. 1) -->
+                    <!-- ИГРОК: Официальный Чарлист -->
                     <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Имя</label><input type="text" id="c_name" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
@@ -164,7 +164,6 @@
                             <div><label class="font-bold text-[#5c4735]">Длина</label><input type="text" id="c_length" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Сердцевина</label><input type="text" id="c_core" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
-                        <!-- Характеристики -->
                         <div class="border-t border-[#5c4735]/30 pt-2 grid grid-cols-3 gap-2 text-center">
                             <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Живучесть</span><input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
                             <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Скорость</span><input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
@@ -173,7 +172,6 @@
                             <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Гибкость</span><input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
                             <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Твёрдость</span><input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
                         </div>
-                        <!-- Убеждения и цели -->
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Убеждения</label><textarea id="c_beliefs" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
                             <div><label class="font-bold text-[#5c4735]">Цели</label><textarea id="c_goals" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
@@ -368,6 +366,10 @@
             socket.on('connect', () => {
                 updateConnectionStatus(true);
                 socket.emit('join_room', { room: currentUser.room, name: currentUser.name, role: currentUser.role });
+                // Сразу отправляем чарлист после коннекта
+                if (currentUser.role === 'player') {
+                    saveCharacterSheet();
+                }
             });
             socket.on('disconnect', () => updateConnectionStatus(false));
             socket.on('state_sync', (state) => {
@@ -504,7 +506,11 @@
                 inventory: document.getElementById('c_inventory').value
             };
             localStorage.setItem(`kpms_sheet_${currentUser.name}`, JSON.stringify(sheet));
-            socket.emit('update_sheet', { room: currentUser.room, name: currentUser.name, sheet });
+            
+            // Безопасная отправка на сервер только при активном соединении
+            if (socket && socket.connected) {
+                socket.emit('update_sheet', { room: currentUser.room, name: currentUser.name, sheet });
+            }
         }
 
         function loadPlayerSheetLocal() {
