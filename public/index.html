@@ -42,6 +42,20 @@
             border-color: #3b2a1a;
             box-shadow: 0 0 0 2px rgba(92, 71, 53, 0.2);
         }
+        /* Стили для интерактивных кнопок характеристик в стиле Long Story Short */
+        .clickable-stat {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .clickable-stat:hover {
+            background-color: #3b2a1a !important;
+            color: #f5ece1 !important;
+            border-color: #3b2a1a !important;
+        }
+        .clickable-stat:hover input {
+            color: #f5ece1 !important;
+            background: transparent !important;
+        }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #d3c4b1; }
         ::-webkit-scrollbar-thumb { background: #5c4735; border-radius: 3px; }
@@ -141,8 +155,11 @@
                         </div>
                     </div>
 
-                    <!-- ИГРОК: Официальный Чарлист -->
+                    <!-- ИГРОК: Официальный Чарлист с кликабельными характеристиками -->
                     <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+                        <div class="text-[11px] text-[#5c4735] italic bg-[#d3c4b1]/30 p-2 rounded border border-[#5c4735]/30">
+                            💡 <strong>Подсказка:</strong> Нажмите на любую характеристику ниже, чтобы автоматически сделать бросок 2d6 с её учетом!
+                        </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Имя</label><input type="text" id="c_name" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Факультет</label>
@@ -168,14 +185,35 @@
                             <div><label class="font-bold text-[#5c4735]">Длина</label><input type="text" id="c_length" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Сердцевина</label><input type="text" id="c_core" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
+
+                        <!-- Интерактивные характеристики (Кликабельные в стиле Long Story Short) -->
                         <div class="border-t border-[#5c4735]/30 pt-2 grid grid-cols-3 gap-2 text-center">
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Живучесть</span><input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Скорость</span><input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Сообразительность</span><input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Сосредоточенность</span><input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Гибкость</span><input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
-                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Твёрдость</span><input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div onclick="rollStat('Живучесть', 'st_live')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Живучесть 🎲</span>
+                                <input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+                            <div onclick="rollStat('Скорость', 'st_speed')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Скорость 🎲</span>
+                                <input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+                            <div onclick="rollStat('Сообразительность', 'st_smart')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Сообразительность 🎲</span>
+                                <input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+                            <div onclick="rollStat('Сосредоточенность', 'st_focus')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Сосредоточенность 🎲</span>
+                                <input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+                            <div onclick="rollStat('Гибкость', 'st_flex')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Гибкость 🎲</span>
+                                <input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+                            <div onclick="rollStat('Твёрдость', 'st_hard')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
+                                <span class="block font-bold text-[11px] underline decoration-dotted">Твёрдость 🎲</span>
+                                <input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
                         </div>
+
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Убеждения</label><textarea id="c_beliefs" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
                             <div><label class="font-bold text-[#5c4735]">Цели</label><textarea id="c_goals" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
@@ -203,13 +241,13 @@
                     <button onclick="openModal('rulesModal')" title="Правила 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">📖</button>
                     <button onclick="openModal('spellsModal')" title="Заклинания" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🪶</button>
                     <button onclick="openModal('potionsModal')" title="Зелья" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🧪</button>
-                    <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#3b2a1a] transition-all shadow-md text-base font-bold">🎲</button>
+                    <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base font-bold">🎲</button>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ИЗОБРАЖЕНИЯ НА ВЕСЬ ЭКРАН -->
+    <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ИЗОБРАЖЕНИЯ -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="closeImageModal()">
         <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-[#f5ece1] text-2xl font-bold px-3 py-1 bg-[#3b2a1a] rounded-full border border-[#f5ece1]">✕ Закрыть</button>
@@ -462,7 +500,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // Функции для работы с полноэкранным модальным окном картинок
         function openImageModal(imgSrc) {
             document.getElementById('modalImageElement').src = imgSrc;
             document.getElementById('imageModal').classList.remove('hidden');
@@ -470,6 +507,46 @@
 
         function closeImageModal() {
             document.getElementById('imageModal').classList.add('hidden');
+        }
+
+        // Автоматический бросок куба при клике на характеристику (в стиле Long Story Short)
+        function rollStat(statName, elementId) {
+            const statVal = parseInt(document.getElementById(elementId).value) || 0;
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const sum = d1 + d2 + statVal;
+            
+            let resultText = "Провал (6-) ❌";
+            if (sum >= 10) resultText = "Успех (10+) ✨";
+            else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
+
+            const text = `🎯 проверка [${statName}]: 2d6 [${d1} + ${d2}] + ${statVal} = <strong>${sum}</strong>. Итог: ${resultText}`;
+            const msg = {
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: text,
+                image: null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            socket.emit('chat_message', { room: currentUser.room, message: msg });
+        }
+
+        function rollDice() {
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const sum = d1 + d2;
+            let resultText = "Провал (6-) ❌";
+            if (sum >= 10) resultText = "Успех (10+) ✨";
+            else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
+
+            const msg = {
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: `🎲 бросил кубики [${d1} + ${d2}] = <strong>${sum}</strong>. Итог: ${resultText}`,
+                image: null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            socket.emit('chat_message', { room: currentUser.room, message: msg });
         }
 
         function uploadMapImage(event) {
@@ -616,24 +693,6 @@
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
-        }
-
-        function rollDice() {
-            const d1 = Math.floor(Math.random() * 6) + 1;
-            const d2 = Math.floor(Math.random() * 6) + 1;
-            const sum = d1 + d2;
-            let resultText = "Провал (6-) ❌";
-            if (sum >= 10) resultText = "Успех (10+) ✨";
-            else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
-
-            const msg = {
-                sender: currentUser.name,
-                role: currentUser.role,
-                text: `🎲 бросил кубики [${d1} + ${d2}] = ${sum}. Итог: ${resultText}`,
-                image: null,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            socket.emit('chat_message', { room: currentUser.room, message: msg });
         }
 
         function openScenarioModal() {
