@@ -121,7 +121,6 @@
                     </div>
                     <div id="chatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-sm"></div>
                     <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-2 border-t border-[#5c4735]/30 flex items-center gap-2 bg-[#f5ece1]">
-                        <!-- Кнопка прикрепления изображения -->
                         <label title="Прикрепить изображение" class="cursor-pointer p-2 rounded-lg border border-[#5c4735] bg-[#d3c4b1] hover:bg-[#5c4735] hover:text-[#f5ece1] text-[#3b2a1a] transition-all flex items-center justify-center text-xs">
                             🖼️ <input type="file" id="chatImageInput" accept="image/*" class="hidden" onchange="sendChatImage(event)">
                         </label>
@@ -204,13 +203,21 @@
                     <button onclick="openModal('rulesModal')" title="Правила 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">📖</button>
                     <button onclick="openModal('spellsModal')" title="Заклинания" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🪶</button>
                     <button onclick="openModal('potionsModal')" title="Зелья" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🧪</button>
-                    <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base font-bold">🎲</button>
+                    <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#3b2a1a] transition-all shadow-md text-base font-bold">🎲</button>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ИЗОБРАЖЕНИЯ НА ВЕСЬ ЭКРАН -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="closeImageModal()">
+        <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-[#f5ece1] text-2xl font-bold px-3 py-1 bg-[#3b2a1a] rounded-full border border-[#f5ece1]">✕ Закрыть</button>
+            <img id="modalImageElement" src="" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl object-contain border-2 border-[#d3c4b1]">
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА СПРАВОЧНИКОВ -->
     <div id="rulesModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
         <div class="parchment-panel max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
             <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
@@ -422,7 +429,6 @@
             input.value = '';
         }
 
-        // Отправка изображения в чат
         function sendChatImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -432,13 +438,13 @@
                     sender: currentUser.name,
                     role: currentUser.role,
                     text: 'прикрепил(а) изображение:',
-                    image: e.target.result, // Base64 картинки
+                    image: e.target.result,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
                 socket.emit('chat_message', { room: currentUser.room, message: msg });
             };
             reader.readAsDataURL(file);
-            event.target.value = ''; // Сбрасываем выбор файла
+            event.target.value = '';
         }
 
         function renderChat() {
@@ -450,10 +456,20 @@
                         <span>${m.time}</span>
                     </div>
                     <div class="text-xs text-[#3b2a1a] mt-0.5">${escapeHtml(m.text)}</div>
-                    ${m.image ? `<div class="mt-2"><img src="${m.image}" class="max-h-48 rounded border border-[#5c4735]/40 object-contain shadow-sm" alt="Иллюстрация"></div>` : ''}
+                    ${m.image ? `<div class="mt-2"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="max-h-40 rounded border border-[#5c4735]/40 object-contain shadow-sm cursor-pointer hover:opacity-90 transition-opacity" title="Нажмите, чтобы открыть во весь экран" alt="Иллюстрация"></div>` : ''}
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
+        }
+
+        // Функции для работы с полноэкранным модальным окном картинок
+        function openImageModal(imgSrc) {
+            document.getElementById('modalImageElement').src = imgSrc;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
         }
 
         function uploadMapImage(event) {
@@ -596,7 +612,7 @@
             container.innerHTML = gameState.events.map(m => `
                 <div class="p-1.5 rounded bg-[#fcf8f2] border border-[#5c4735]/20 text-[11px]">
                     <span class="font-bold text-[#5c4735]">[${m.time}] ${m.sender}:</span> ${escapeHtml(m.text)}
-                    ${m.image ? `<div class="mt-1"><img src="${m.image}" class="max-h-36 rounded border border-[#5c4735]/40 object-contain shadow-sm" alt="Иллюстрация"></div>` : ''}
+                    ${m.image ? `<div class="mt-1"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="max-h-32 rounded border border-[#5c4735]/40 object-contain shadow-sm cursor-pointer hover:opacity-90" title="Нажмите для увеличения" alt="Иллюстрация"></div>` : ''}
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
