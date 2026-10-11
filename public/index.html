@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КПМБ — Клуб Прикладной Магической Безопасности | НРИ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Socket.IO Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            light: '#f5ece1',
+                            DEFAULT: '#d3c4b1',
+                            dark: '#b8a894',
+                        },
+                        ink: {
+                            DEFAULT: '#3b2a1a',
+                            dark: '#241a0f',
+                            light: '#5c4735',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #d3c4b1;
+            color: #3b2a1a;
+            font-family: Georgia, serif;
+            background-image: radial-gradient(#c5b5a0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .parchment-panel {
+            background: #f5ece1;
+            border: 2px solid #5c4735;
+            box-shadow: 0 4px 6px -1px rgba(59, 42, 26, 0.15), inset 0 0 40px rgba(184, 168, 148, 0.3);
+        }
+        .parchment-input {
+            background: #fcf8f2;
+            border: 1px solid #5c4735;
+            color: #3b2a1a;
+        }
+        .parchment-input:focus {
+            outline: none;
+            border-color: #3b2a1a;
+            box-shadow: 0 0 0 2px rgba(92, 71, 53, 0.2);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #d3c4b1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #5c4735;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col antialiased selection:bg-[#5c4735] selection:text-[#f5ece1]">
+
+    <!-- ЭКРАН АВТОРИЗАЦИИ -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
+        <div class="parchment-panel max-w-md w-full p-8 rounded-2xl shadow-2xl text-center space-y-6">
+            <div class="space-y-2 border-b border-[#5c4735]/30 pb-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-2 border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] text-2xl font-bold shadow-inner">
+                    КП
+                </div>
+                <h1 class="text-3xl font-bold tracking-wide text-[#3b2a1a]">КПМБ</h1>
+                <p class="text-sm font-medium text-[#5c4735] italic">Клуб Прикладной Магической Безопасности</p>
+            </div>
+
+            <div class="flex rounded-full p-1 bg-[#d3c4b1] border border-[#5c4735]">
+                <button type="button" id="rolePlayerBtn" onclick="setRole('player')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all bg-[#5c4735] text-[#f5ece1] shadow">
+                    СОЗДАТЬ (Игрок)
+                </button>
+                <button type="button" id="roleMasterBtn" onclick="setRole('master')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all text-[#3b2a1a] hover:text-[#3b2a1a]">
+                    ВОЙТИ (Мастер)
+                </button>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#5c4735] mb-1">Имя персонажа / Мастера</label>
+                    <input type="text" id="usernameInput" required placeholder="Например: Артур Хаус-Дейтон" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#5c4735] mb-1">Код комнаты</label>
+                    <input type="text" id="roomInput" required value="hogwarts-1" placeholder="hogwarts-1" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm font-mono">
+                </div>
+                <button type="submit" class="w-full py-3 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-xl shadow-lg hover:bg-[#5c4735] transition-all tracking-wider uppercase text-sm border border-[#5c4735]">
+                    Войти в замок
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС -->
+    <div id="gameScreen" class="hidden flex-1 flex flex-col h-full overflow-hidden">
+        <header class="bg-[#f5ece1] border-b border-[#5c4735]/40 px-6 py-3 flex items-center justify-between shadow-sm z-10">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full border border-[#5c4735] flex items-center justify-center font-bold text-xs bg-[#d3c4b1]">КП</div>
+                <div>
+                    <h2 class="text-sm font-bold leading-tight" id="roomTitleDisplay">Комната: hogwarts-1</h2>
+                    <p class="text-xs text-[#5c4735]" id="userInfoDisplay">Игрок: Неизвестно</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span id="connectionStatus" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300">
+                    <span class="w-2 h-2 mr-1.5 bg-amber-500 rounded-full animate-pulse"></span> Подключение...
+                </span>
+                <button onclick="logout()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-[#5c4735] text-[#3b2a1a] hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all">
+                    Выйти
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 overflow-hidden">
+            <!-- ЛЕВАЯ КОЛОНКА (Карта + Чат) -->
+            <section class="lg:col-span-7 flex flex-col gap-4 h-full overflow-hidden">
+                <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden relative min-h-[300px]">
+                    <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]">🗺 Интерактивная карта</span>
+                        <!-- Элементы управления картой доступны ТОЛЬКО Мастеру -->
+                        <div id="masterMapControls" class="hidden items-center space-x-2">
+                            <label class="cursor-pointer px-2.5 py-1 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded hover:bg-[#5c4735] transition-all">
+                                📤 Загрузить карту <input type="file" id="mapImageLoader" accept="image/*" class="hidden" onchange="uploadMapImage(event)">
+                            </label>
+                            <button onclick="addNpcToken()" class="px-2.5 py-1 text-xs font-bold bg-[#d3c4b1] border border-[#5c4735] text-[#3b2a1a] rounded hover:bg-[#5c4735] hover:text-[#f5ece1] transition-all">+ Токен NPC</button>
+                        </div>
+                    </div>
+                    <div id="mapContainer" class="flex-1 relative overflow-auto bg-[#eaddcf] cursor-grab flex items-center justify-center" style="background-image: radial-gradient(#c5b5a0 1px, transparent 1px); background-size: 32px 32px;" ondragover="allowDrop(event)" ondrop="dropToken(event)">
+                        <img id="mapImageElement" src="" class="absolute inset-0 w-full h-full object-cover opacity-85 pointer-events-none" alt="Карта">
+                        <div id="tokensLayer" class="absolute inset-0 pointer-events-none"></div>
+                    </div>
+                </div>
+
+                <div class="parchment-panel h-56 rounded-2xl flex flex-col overflow-hidden">
+                    <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]">💬 Общий чат сессии</span>
+                    </div>
+                    <div id="chatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-sm"></div>
+                    <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-2 border-t border-[#5c4735]/30 flex gap-2 bg-[#f5ece1]">
+                        <input type="text" id="chatInput" placeholder="Введите реплику или действие..." class="parchment-input flex-1 px-3 py-2 rounded-lg text-sm">
+                        <button type="submit" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-lg hover:bg-[#5c4735] transition-all text-xs uppercase">Отправить</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ПРАВАЯ КОЛОНКА (Чарлист или Панель Мастера) -->
+            <section class="lg:col-span-5 flex flex-col gap-4 h-full overflow-hidden">
+                <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden">
+                    <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]" id="rightPanelTitle">Интерактивный Чарлист</span>
+                        <!-- Вкладки Мастера -->
+                        <div id="masterTabs" class="hidden flex space-x-1">
+                            <button onclick="switchMasterTab('events')" id="tabEventsBtn" class="px-2 py-0.5 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded">События</button>
+                            <button onclick="switchMasterTab('sheets')" id="tabSheetsBtn" class="px-2 py-0.5 text-xs font-bold bg-[#d3c4b1] text-[#3b2a1a] rounded">Чарлисты игроков</button>
+                        </div>
+                    </div>
+
+                    <!-- Личный чарлист игрока (Участники видят только свой) -->
+                    <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Имя персонажа</label>
+                                <input type="text" id="charName" oninput="saveCharacterSheet()" class="parchment-input w-full px-3 py-1.5 rounded-lg text-sm font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Факультет</label>
+                                <select id="charHouse" onchange="saveCharacterSheet()" class="parchment-input w-full px-3 py-1.5 rounded-lg text-sm">
+                                    <option value="Гриффиндор">Гриффиндор</option>
+                                    <option value="Слизерин">Слизерин</option>
+                                    <option value="Когтевран">Когтевран</option>
+                                    <option value="Пуффендуй">Пуффендуй</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Палочка</label>
+                                <input type="text" id="charWand" oninput="saveCharacterSheet()" placeholder="Тис, 12 дюймов" class="parchment-input w-full px-3 py-1.5 rounded-lg text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Состояние</label>
+                                <input type="text" id="charStatus" oninput="saveCharacterSheet()" placeholder="Здоров" class="parchment-input w-full px-3 py-1.5 rounded-lg text-xs">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#5c4735] mb-1">Заметки и инвентарь</label>
+                            <textarea id="charNotes" oninput="saveCharacterSheet()" rows="6" placeholder="Артефакты, зелья, цели..." class="parchment-input w-full px-3 py-2 rounded-lg text-xs"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- События для Мастера -->
+                    <div id="masterEventsContainer" class="hidden flex-1 p-4 overflow-y-auto space-y-2 text-xs font-mono">
+                        <div class="text-[#5c4735] italic"># Сессия инициализирована.</div>
+                    </div>
+
+                    <!-- Просмотр всех чарлистов (Только для Мастера) -->
+                    <div id="masterAllSheetsContainer" class="hidden flex-1 p-4 overflow-y-auto space-y-4"></div>
+                </div>
+
+                <!-- Нижняя панель с иконками -->
+                <div class="parchment-panel p-3 rounded-2xl flex items-center justify-end space-x-2">
+                    <!-- Кнопка генерации сценария (Строго для Мастера) -->
+                    <div id="masterActionButtons" class="hidden flex items-center space-x-2 mr-auto border-r border-[#5c4735]/30 pr-3">
+                        <button onclick="openScenarioModal()" title="Генерация сценария" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base">
+                            🔄
+                        </button>
+                    </div>
+
+                    <button onclick="openModal('rulesModal')" title="Книга правил (2d6)" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">📖</button>
+                    <button onclick="openModal('spellsModal')" title="Справочник заклинаний" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🪶</button>
+                    <button onclick="openModal('potionsModal')" title="Справочник зелий" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🧪</button>
+                    <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base font-bold">🎲</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <div id="rulesModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
+        <div class="parchment-panel max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
+                <h3 class="font-bold text-lg text-[#3b2a1a]">📖 Механика 2d6</h3>
+                <button onclick="closeModal('rulesModal')" class="font-bold text-[#5c4735]">✕</button>
+            </div>
+            <p class="text-sm">10+ Успех, 7–9 Частичный успех, 6- Провал.</p>
+            <div class="text-right"><button onclick="closeModal('rulesModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
+        </div>
+    </div>
+
+    <div id="spellsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
+        <div class="parchment-panel max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-4 max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
+                <h3 class="font-bold text-lg text-[#3b2a1a]">🪶 Заклинания</h3>
+                <button onclick="closeModal('spellsModal')" class="font-bold text-[#5c4735]">✕</button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-2 text-sm">
+                <div><strong>Люмос:</strong> Свет.</div>
+                <div><strong>Алохомора:</strong> Отпирание замков.</div>
+                <div><strong>Экспеллиармус:</strong> Обезоруживание.</div>
+            </div>
+            <div class="text-right"><button onclick="closeModal('spellsModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
+        </div>
+    </div>
+
+    <div id="potionsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
+        <div class="parchment-panel max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-4 max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
+                <h3 class="font-bold text-lg text-[#3b2a1a]">🧪 Зелья</h3>
+                <button onclick="closeModal('potionsModal')" class="font-bold text-[#5c4735]">✕</button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-2 text-sm">
+                <div><strong>Оборотное зелье:</strong> Смена облика.</div>
+                <div><strong>Живая смерть:</strong> Сон.</div>
+            </div>
+            <div class="text-right"><button onclick="closeModal('potionsModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно генератора (Только Мастер) -->
+    <div id="scenarioModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
+        <div class="parchment-panel max-w-xl w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
+                <h3 class="font-bold text-lg text-[#3b2a1a]">🔄 Генератор сюжетов (Только для Мастера)</h3>
+                <button onclick="closeModal('scenarioModal')" class="font-bold text-[#5c4735]">✕</button>
+            </div>
+            <div class="space-y-4 text-sm">
+                <div id="scenarioOutput" class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-lg text-xs italic min-h-[60px] flex items-center">
+                    Нажмите кнопку генерации...
+                </div>
+                <button onclick="generateRandomScenario()" class="w-full py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-lg text-xs uppercase tracking-wider hover:bg-[#5c4735]">Сгенерировать</button>
+            </div>
+            <div class="text-right"><button onclick="closeModal('scenarioModal')" class="px-4 py-2 bg-[#5c4735] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
+        </div>
+    </div>
+
+    <!-- СКРИПТЫ КЛИЕНТА -->
+    <script>
+        let socket;
+        let currentUser = { name: '', role: 'player', room: 'hogwarts-1' };
+        let gameState = { mapImage: '', tokens: [], sheets: {}, events: [] };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('kpms_username');
+            if (savedName) document.getElementById('usernameInput').value = savedName;
+        });
+
+        function setRole(role) {
+            currentUser.role = role;
+            const pBtn = document.getElementById('rolePlayerBtn');
+            const mBtn = document.getElementById('roleMasterBtn');
+            if (role === 'player') {
+                pBtn.className = "flex-1 py-2 text-sm font-bold rounded-full transition-all bg-[#5c4735] text-[#f5ece1] shadow";
+                mBtn.className = "flex-1 py-2 text-sm font-bold rounded-full transition-all text-[#3b2a1a]";
+            } else {
+                mBtn.className = "flex-1 py-2 text-sm font-bold rounded-full transition-all bg-[#5c4735] text-[#f5ece1] shadow";
+                pBtn.className = "flex-1 py-2 text-sm font-bold rounded-full transition-all text-[#3b2a1a]";
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const name = document.getElementById('usernameInput').value.trim();
+            const room = document.getElementById('roomInput').value.trim();
+            if (!name || !room) return;
+
+            currentUser.name = name;
+            currentUser.room = room;
+            localStorage.setItem('kpms_username', name);
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            document.getElementById('roomTitleDisplay').innerText = `Комната: ${room}`;
+            document.getElementById('userInfoDisplay').innerText = `${currentUser.role === 'master' ? '🧙‍♂️ Мастер' : '⚡ Игрок'}: ${name}`;
+
+            setupRoleInterface();
+            initSocket();
+        }
+
+        function setupRoleInterface() {
+            const mmControls = document.getElementById('masterMapControls');
+            const mActions = document.getElementById('masterActionButtons');
+            const mTabs = document.getElementById('masterTabs');
+            const rTitle = document.getElementById('rightPanelTitle');
+            const pSheet = document.getElementById('playerSheetContainer');
+            const mEvents = document.getElementById('masterEventsContainer');
+
+            if (currentUser.role === 'master') {
+                mmControls.classList.remove('hidden'); mmControls.classList.add('flex');
+                mActions.classList.remove('hidden'); mActions.classList.add('flex');
+                mTabs.classList.remove('hidden'); mTabs.classList.add('flex');
+                rTitle.innerText = "События сессии";
+                pSheet.classList.add('hidden');
+                mEvents.classList.remove('hidden');
+            } else {
+                mmControls.classList.add('hidden');
+                mActions.classList.add('hidden');
+                mTabs.classList.add('hidden');
+                rTitle.innerText = "Интерактивный Чарлист";
+                pSheet.classList.remove('hidden');
+                mEvents.classList.add('hidden');
+                loadPlayerSheetLocal();
+            }
+        }
+
+        function switchMasterTab(tab) {
+            const eventsCont = document.getElementById('masterEventsContainer');
+            const sheetsCont = document.getElementById('masterAllSheetsContainer');
+            const btnEvents = document.getElementById('tabEventsBtn');
+            const btnSheets = document.getElementById('tabSheetsBtn');
+            const rightPanelTitle = document.getElementById('rightPanelTitle');
+
+            if (tab === 'events') {
+                eventsCont.classList.remove('hidden');
+                sheetsCont.classList.add('hidden');
+                btnEvents.className = "px-2 py-0.5 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded";
+                btnSheets.className = "px-2 py-0.5 text-xs font-bold bg-[#d3c4b1] text-[#3b2a1a] rounded";
+                rightPanelTitle.innerText = "События сессии";
+            } else {
+                eventsCont.classList.add('hidden');
+                sheetsCont.classList.remove('hidden');
+                btnSheets.className = "px-2 py-0.5 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded";
+                btnEvents.className = "px-2 py-0.5 text-xs font-bold bg-[#d3c4b1] text-[#3b2a1a] rounded";
+                rightPanelTitle.innerText = "Чарлисты всех участников";
+                renderAllSheetsMaster();
+            }
+        }
+
+        function logout() {
+            if (socket) socket.disconnect();
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function initSocket() {
+            socket = io();
+            socket.on('connect', () => {
+                updateConnectionStatus(true);
+                socket.emit('join_room', { room: currentUser.room, name: currentUser.name, role: currentUser.role });
+            });
+            socket.on('disconnect', () => updateConnectionStatus(false));
+            socket.on('state_sync', (state) => {
+                gameState = state;
+                renderMap();
+                renderChat();
+                if (currentUser.role === 'master') renderMasterEvents();
+            });
+            socket.on('chat_message', (msg) => {
+                gameState.events.push(msg);
+                renderChat();
+                if (currentUser.role === 'master') renderMasterEvents();
+            });
+            socket.on('sheet_updated', (data) => {
+                gameState.sheets[data.name] = data.sheet;
+                if (currentUser.role === 'master' && !document.getElementById('masterAllSheetsContainer').classList.contains('hidden')) {
+                    renderAllSheetsMaster();
+                }
+            });
+        }
+
+        function updateConnectionStatus(connected) {
+            const el = document.getElementById('connectionStatus');
+            if (connected) {
+                el.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-300";
+                el.innerHTML = '<span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full"></span> Подключено';
+            } else {
+                el.className = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300";
+                el.innerHTML = '<span class="w-2 h-2 mr-1.5 bg-amber-500 rounded-full animate-pulse"></span> Переподключение...';
+            }
+        }
+
+        function sendChatMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const msg = {
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            socket.emit('chat_message', { room: currentUser.room, message: msg });
+            input.value = '';
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = gameState.events.map(m => `
+                <div class="p-1.5 rounded bg-[#fcf8f2] border border-[#5c4735]/20">
+                    <div class="flex justify-between items-center text-[10px] text-[#5c4735] font-bold">
+                        <span>${m.sender} ${m.role === 'master' ? '🧙‍♂️' : '⚡'}</span>
+                        <span>${m.time}</span>
+                    </div>
+                    <div class="text-xs text-[#3b2a1a] mt-0.5">${escapeHtml(m.text)}</div>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function uploadMapImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                gameState.mapImage = e.target.result;
+                socket.emit('update_map', { room: currentUser.room, mapImage: gameState.mapImage });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addNpcToken() {
+            const npcName = prompt("Имя NPC:", "Дементор");
+            if (!npcName) return;
+            gameState.tokens.push({ id: 'npc_' + Date.now(), name: npcName, x: 50, y: 50, isNpc: true });
+            socket.emit('update_tokens', { room: currentUser.room, tokens: gameState.tokens });
+        }
+
+        function renderMap() {
+            document.getElementById('mapImageElement').src = gameState.mapImage || '';
+            const layer = document.getElementById('tokensLayer');
+            layer.innerHTML = gameState.tokens.map(t => `
+                <div draggable="true" ondragstart="dragToken(event, '${t.id}')" 
+                     style="left: ${t.x}%; top: ${t.y}%;" 
+                     class="absolute -translate-x-1/2 -translate-y-1/2 cursor-move pointer-events-auto flex flex-col items-center group">
+                    <div class="w-8 h-8 rounded-full bg-[#3b2a1a] border-2 border-[#f5ece1] text-[#f5ece1] font-bold text-xs flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        ${t.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span class="bg-[#3b2a1a]/80 text-[#f5ece1] text-[10px] px-1.5 py-0.5 rounded shadow mt-0.5 whitespace-nowrap">${t.name}</span>
+                </div>
+            `).join('');
+        }
+
+        let draggedTokenId = null;
+        function dragToken(event, id) { draggedTokenId = id; }
+        function allowDrop(event) { event.preventDefault(); }
+        function dropToken(event) {
+            event.preventDefault();
+            if (!draggedTokenId) return;
+            const container = document.getElementById('mapContainer');
+            const rect = container.getBoundingClientRect();
+            const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+            const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+            const token = gameState.tokens.find(t => t.id === draggedTokenId);
+            if (token) {
+                token.x = x; token.y = y;
+                socket.emit('update_tokens', { room: currentUser.room, tokens: gameState.tokens });
+            }
+            draggedTokenId = null;
+        }
+
+        function saveCharacterSheet() {
+            if (currentUser.role === 'master') return;
+            const sheet = {
+                name: document.getElementById('charName').value,
+                house: document.getElementById('charHouse').value,
+                wand: document.getElementById('charWand').value,
+                status: document.getElementById('charStatus').value,
+                notes: document.getElementById('charNotes').value
+            };
+            localStorage.setItem(`kpms_sheet_${currentUser.name}`, JSON.stringify(sheet));
+            socket.emit('update_sheet', { room: currentUser.room, name: currentUser.name, sheet });
+        }
+
+        function loadPlayerSheetLocal() {
+            document.getElementById('charName').value = currentUser.name;
+            const saved = localStorage.getItem(`kpms_sheet_${currentUser.name}`);
+            if (saved) {
+                try {
+                    const sheet = JSON.parse(saved);
+                    document.getElementById('charHouse').value = sheet.house || 'Гриффиндор';
+                    document.getElementById('charWand').value = sheet.wand || '';
+                    document.getElementById('charStatus').value = sheet.status || '';
+                    document.getElementById('charNotes').value = sheet.notes || '';
+                } catch(e) {}
+            }
+            saveCharacterSheet();
+        }
+
+        function renderAllSheetsMaster() {
+            const container = document.getElementById('masterAllSheetsContainer');
+            const sheets = gameState.sheets || {};
+            const keys = Object.keys(sheets);
+            if (keys.length === 0) {
+                container.innerHTML = '<div class="text-xs text-[#5c4735] italic">Пока никто не заполнил чарлист.</div>';
+                return;
+            }
+            container.innerHTML = keys.map(name => {
+                const s = sheets[name];
+                return `
+                    <div class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center border-b border-[#5c4735]/20 pb-1">
+                            <span class="font-bold text-xs text-[#3b2a1a]">⚡ ${s.name || name} (${s.house || ''})</span>
+                            <span class="text-[10px] bg-[#d3c4b1] px-2 py-0.5 rounded">${s.status || 'В норме'}</span>
+                        </div>
+                        <div class="text-[11px] text-[#5c4735] space-y-1">
+                            <div><strong>Палочка:</strong> ${s.wand || 'Нет'}</div>
+                            <div><strong>Заметки:</strong> ${escapeHtml(s.notes || 'Пусто')}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMasterEvents() {
+            const container = document.getElementById('masterEventsContainer');
+            container.innerHTML = gameState.events.map(m => `
+                <div class="p-1.5 rounded bg-[#fcf8f2] border border-[#5c4735]/20 text-[11px]">
+                    <span class="font-bold text-[#5c4735]">[${m.time}] ${m.sender}:</span> ${escapeHtml(m.text)}
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function rollDice() {
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const sum = d1 + d2;
+            let resultText = "Провал (6-) ❌";
+            if (sum >= 10) resultText = "Успех (10+) ✨";
+            else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
+
+            const msg = {
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: `🎲 бросил кубики [${d1} + ${d2}] = ${sum}. Итог: ${resultText}`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            socket.emit('chat_message', { room: currentUser.room, message: msg });
+        }
+
+        function openScenarioModal() {
+            if (currentUser.role !== 'master') return;
+            openModal('scenarioModal');
+            generateRandomScenario();
+        }
+
+        function generateRandomScenario() {
+            const hooks = [
+                "В Запретном лесу обнаружена странная магическая аномалия.",
+                "Прямо во время урока Клуба староста находит зашифрованное письмо.",
+                "Неизвестный артефакт в библиотеке начал поглощать воспоминания."
+            ];
+            document.getElementById('scenarioOutput').innerText = hooks[Math.floor(Math.random() * hooks.length)];
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
