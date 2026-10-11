@@ -42,7 +42,6 @@
             border-color: #3b2a1a;
             box-shadow: 0 0 0 2px rgba(92, 71, 53, 0.2);
         }
-        /* Стили для интерактивных кнопок характеристик в стиле Long Story Short */
         .clickable-stat {
             transition: all 0.2s ease;
             cursor: pointer;
@@ -128,7 +127,7 @@
                     </div>
                 </div>
 
-                <!-- Чат с поддержкой картинок -->
+                <!-- Чат -->
                 <div class="parchment-panel h-60 rounded-2xl flex flex-col overflow-hidden">
                     <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
                         <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]">💬 Общий чат сессии</span>
@@ -144,7 +143,7 @@
                 </div>
             </section>
 
-            <!-- ПРАВАЯ КОЛОНКА (Чарлист или Панель Мастера) -->
+            <!-- ПРАВАЯ КОЛОНКА -->
             <section class="lg:col-span-5 flex flex-col gap-4 h-full overflow-hidden">
                 <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden">
                     <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
@@ -155,11 +154,12 @@
                         </div>
                     </div>
 
-                    <!-- ИГРОК: Официальный Чарлист с кликабельными характеристиками -->
+                    <!-- ИГРОК: Чарлист -->
                     <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
                         <div class="text-[11px] text-[#5c4735] italic bg-[#d3c4b1]/30 p-2 rounded border border-[#5c4735]/30">
-                            💡 <strong>Подсказка:</strong> Нажмите на любую характеристику ниже, чтобы автоматически сделать бросок 2d6 с её учетом!
+                            💡 <strong>Подсказка:</strong> Нажмите на любой навык или характеристику, чтобы сделать автобросок 2d6!
                         </div>
+
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Имя</label><input type="text" id="c_name" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Факультет</label>
@@ -171,46 +171,67 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="grid grid-cols-3 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Школа</label><input type="text" id="c_school" value="Хогвартс" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
-                            <div><label class="font-bold text-[#5c4735]">Год</label><input type="text" id="c_year" value="5" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Курс</label><input type="text" id="c_year" value="5" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Профессия</label><input type="text" id="c_job" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
+
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Происхождение</label><input type="text" id="c_origin" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Фамильяр</label><input type="text" id="c_fam" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
+
                         <div class="grid grid-cols-3 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Древесина</label><input type="text" id="c_wood" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Длина</label><input type="text" id="c_length" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                             <div><label class="font-bold text-[#5c4735]">Сердцевина</label><input type="text" id="c_core" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
 
-                        <!-- Интерактивные характеристики (Кликабельные в стиле Long Story Short) -->
-                        <div class="border-t border-[#5c4735]/30 pt-2 grid grid-cols-3 gap-2 text-center">
-                            <div onclick="rollStat('Живучесть', 'st_live')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Живучесть 🎲</span>
-                                <input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                        <div class="border-t border-[#5c4735]/30 pt-2">
+                            <span class="font-bold text-[#5c4735] block mb-1 uppercase tracking-wider text-[10px]">Характеристики</span>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div onclick="rollStat('Живучесть', 'st_live')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Живучесть 🎲</span>
+                                    <input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
+                                <div onclick="rollStat('Скорость', 'st_speed')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Скорость 🎲</span>
+                                    <input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
+                                <div onclick="rollStat('Сообразительность', 'st_smart')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Сообразительность 🎲</span>
+                                    <input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
+                                <div onclick="rollStat('Сосредоточенность', 'st_focus')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Сосредоточенность 🎲</span>
+                                    <input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
+                                <div onclick="rollStat('Гибкость', 'st_flex')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Гибкость 🎲</span>
+                                    <input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
+                                <div onclick="rollStat('Твёрдость', 'st_hard')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
+                                    <span class="block font-bold text-[11px] underline decoration-dotted">Твёрдость 🎲</span>
+                                    <input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                                </div>
                             </div>
-                            <div onclick="rollStat('Скорость', 'st_speed')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Скорость 🎲</span>
-                                <input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                            </div>
-                            <div onclick="rollStat('Сообразительность', 'st_smart')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Сообразительность 🎲</span>
-                                <input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                            </div>
-                            <div onclick="rollStat('Сосредоточенность', 'st_focus')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Сосредоточенность 🎲</span>
-                                <input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                            </div>
-                            <div onclick="rollStat('Гибкость', 'st_flex')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Гибкость 🎲</span>
-                                <input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                            </div>
-                            <div onclick="rollStat('Твёрдость', 'st_hard')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm" title="Кликните для броска!">
-                                <span class="block font-bold text-[11px] underline decoration-dotted">Твёрдость 🎲</span>
-                                <input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                        </div>
+
+                        <div class="border-t border-[#5c4735]/30 pt-3">
+                            <span class="font-bold text-[#5c4735] block mb-2 uppercase tracking-wider text-[11px] text-center border-b border-[#5c4735]/20 pb-1">✦ Навыки ✦</span>
+                            <div id="skillsGridContainer" class="grid grid-cols-1 md:grid-cols-3 gap-1.5"></div>
+                        </div>
+
+                        <div class="border-t border-[#5c4735]/30 pt-3 space-y-3">
+                            <div class="flex items-center justify-between bg-[#fcf8f2] p-2 rounded border border-[#5c4735]/30">
+                                <span class="font-bold text-[#5c4735]">⚡ Сюжетные баллы</span>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="changeStoryPoints(-1)" class="px-2 py-0.5 bg-[#d3c4b1] font-bold rounded hover:bg-[#5c4735] hover:text-[#f5ece1]">-</button>
+                                    <span id="storyPointsDisplay" class="font-bold text-sm w-6 text-center">0</span>
+                                    <button onclick="changeStoryPoints(1)" class="px-2 py-0.5 bg-[#d3c4b1] font-bold rounded hover:bg-[#5c4735] hover:text-[#f5ece1]">+</button>
+                                </div>
                             </div>
                         </div>
 
@@ -229,11 +250,10 @@
                         <div class="text-[#5c4735] italic"># Сессия инициализирована.</div>
                     </div>
 
-                    <!-- МАСТЕР: Чарлисты всех игроков -->
+                    <!-- МАСТЕР: Чарлисты всех игроков с возможностью редактирования -->
                     <div id="masterAllSheetsContainer" class="hidden flex-1 p-4 overflow-y-auto space-y-4"></div>
                 </div>
 
-                <!-- Нижняя панель с иконками -->
                 <div class="parchment-panel p-3 rounded-2xl flex items-center justify-end space-x-2">
                     <div id="masterActionButtons" class="hidden flex items-center space-x-2 mr-auto border-r border-[#5c4735]/30 pr-3">
                         <button onclick="openScenarioModal()" title="Генерация сценария" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base">🔄</button>
@@ -247,7 +267,7 @@
         </main>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ИЗОБРАЖЕНИЯ -->
+    <!-- МОДАЛЬНЫЕ ОКНА -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="closeImageModal()">
         <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-[#f5ece1] text-2xl font-bold px-3 py-1 bg-[#3b2a1a] rounded-full border border-[#f5ece1]">✕ Закрыть</button>
@@ -255,7 +275,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА СПРАВОЧНИКОВ -->
     <div id="rulesModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
         <div class="parchment-panel max-w-lg w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
             <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
@@ -317,11 +336,39 @@
         let socket;
         let currentUser = { name: '', role: 'player', room: 'hogwarts-1' };
         let gameState = { mapImage: '', tokens: [], sheets: {}, events: [] };
+        let storyPoints = 0;
+
+        const SKILLS_LIST = [
+            "Алхимия", "Артефакторика", "Архивариус", "Астрономия*", "Баланс*",
+            "Верховая езда*", "Взаимопонимание*", "Дуэль", "Защита от тёмных искусств", "Зельеварение",
+            "Знание волшебных палочек", "Изучение древних рун", "Искусство*", "Исследования древности",
+            "История магии", "Исцеление", "Любопытные факты*", "Магловедение", "Маскировка",
+            "Музыка*", "Наблюдательность*", "Нумерология", "Окклюменция", "Полёт на метле**",
+            "Полномочия", "Право", "Прорицание", "Ремесло*", "Репутация***",
+            "Скрытность*", "Слежение", "Сокрытие*", "Стратегия*", "Схватка",
+            "Телепортация", "Тёмные искусства", "Теория магии", "Травология", "Трансфигурация",
+            "Уход за магическими существами", "Хитрость*", "Чары"
+        ];
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('kpms_username');
             if (savedName) document.getElementById('usernameInput').value = savedName;
+            renderSkillsGrid();
         });
+
+        function renderSkillsGrid() {
+            const container = document.getElementById('skillsGridContainer');
+            if (!container) return;
+            container.innerHTML = SKILLS_LIST.map((skill, index) => {
+                const id = `sk_${index}`;
+                return `
+                    <div onclick="rollSkill('${skill}', '${id}')" class="clickable-stat flex items-center justify-between p-1 bg-[#fcf8f2] border border-[#5c4735]/20 rounded text-[10px]" title="Кликните для автоброска!">
+                        <span class="truncate pr-1 font-medium">${skill}</span>
+                        <input type="number" id="${id}" value="0" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-8 h-5 text-center parchment-input rounded font-bold text-[10px]">
+                    </div>
+                `;
+            }).join('');
+        }
 
         function setRole(role) {
             currentUser.role = role;
@@ -425,7 +472,12 @@
                 gameState = state;
                 renderMap();
                 renderChat();
-                if (currentUser.role === 'master') renderMasterEvents();
+                if (currentUser.role === 'master') {
+                    renderMasterEvents();
+                    if (!document.getElementById('masterAllSheetsContainer').classList.contains('hidden')) {
+                        renderAllSheetsMaster();
+                    }
+                }
             });
             socket.on('chat_message', (msg) => {
                 gameState.events.push(msg);
@@ -434,6 +486,10 @@
             });
             socket.on('sheet_updated', (data) => {
                 gameState.sheets[data.name] = data.sheet;
+                // Если чарлист принадлежит текущему игроку и его обновил Мастер
+                if (currentUser.role === 'player' && data.name === currentUser.name) {
+                    applySheetToUI(data.sheet);
+                }
                 if (currentUser.role === 'master' && !document.getElementById('masterAllSheetsContainer').classList.contains('hidden')) {
                     renderAllSheetsMaster();
                 }
@@ -509,7 +565,6 @@
             document.getElementById('imageModal').classList.add('hidden');
         }
 
-        // Автоматический бросок куба при клике на характеристику (в стиле Long Story Short)
         function rollStat(statName, elementId) {
             const statVal = parseInt(document.getElementById(elementId).value) || 0;
             const d1 = Math.floor(Math.random() * 6) + 1;
@@ -521,6 +576,27 @@
             else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
 
             const text = `🎯 проверка [${statName}]: 2d6 [${d1} + ${d2}] + ${statVal} = <strong>${sum}</strong>. Итог: ${resultText}`;
+            const msg = {
+                sender: currentUser.name,
+                role: currentUser.role,
+                text: text,
+                image: null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            socket.emit('chat_message', { room: currentUser.room, message: msg });
+        }
+
+        function rollSkill(skillName, elementId) {
+            const skillVal = parseInt(document.getElementById(elementId).value) || 0;
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const sum = d1 + d2 + skillVal;
+
+            let resultText = "Провал (6-) ❌";
+            if (sum >= 10) resultText = "Успех (10+) ✨";
+            else if (sum >= 7) resultText = "Частичный успех (7-9) ⚠️";
+
+            const text = `📜 проверка навыка [${skillName}]: 2d6 [${d1} + ${d2}] + ${skillVal} = <strong>${sum}</strong>. Итог: ${resultText}`;
             const msg = {
                 sender: currentUser.name,
                 role: currentUser.role,
@@ -547,6 +623,12 @@
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             socket.emit('chat_message', { room: currentUser.room, message: msg });
+        }
+
+        function changeStoryPoints(val) {
+            storyPoints = Math.max(0, storyPoints + val);
+            document.getElementById('storyPointsDisplay').innerText = storyPoints;
+            saveCharacterSheet();
         }
 
         function uploadMapImage(event) {
@@ -602,6 +684,13 @@
 
         function saveCharacterSheet() {
             if (currentUser.role === 'master') return;
+            
+            const skillsData = {};
+            SKILLS_LIST.forEach((_, idx) => {
+                const el = document.getElementById(`sk_${idx}`);
+                if (el) skillsData[`sk_${idx}`] = el.value;
+            });
+
             const sheet = {
                 name: document.getElementById('c_name').value,
                 house: document.getElementById('c_house').value,
@@ -619,6 +708,8 @@
                 focus: document.getElementById('st_focus').value,
                 flex: document.getElementById('st_flex').value,
                 hard: document.getElementById('st_hard').value,
+                skills: skillsData,
+                storyPoints: storyPoints,
                 beliefs: document.getElementById('c_beliefs').value,
                 goals: document.getElementById('c_goals').value,
                 inventory: document.getElementById('c_inventory').value
@@ -629,35 +720,97 @@
             }
         }
 
+        // Сохранение чарлиста Мастером для конкретного игрока
+        function saveCharacterSheetByMaster(playerName) {
+            const skillsData = {};
+            SKILLS_LIST.forEach((_, idx) => {
+                const el = document.getElementById(`m_sk_${playerName}_${idx}`);
+                if (el) skillsData[`sk_${idx}`] = el.value;
+            });
+
+            const sheet = {
+                name: playerName,
+                house: document.getElementById(`m_house_${playerName}`).value,
+                school: document.getElementById(`m_school_${playerName}`).value,
+                year: document.getElementById(`m_year_${playerName}`).value,
+                job: document.getElementById(`m_job_${playerName}`).value,
+                origin: document.getElementById(`m_origin_${playerName}`).value,
+                fam: document.getElementById(`m_fam_${playerName}`).value,
+                wood: document.getElementById(`m_wood_${playerName}`).value,
+                length: document.getElementById(`m_length_${playerName}`).value,
+                core: document.getElementById(`m_core_${playerName}`).value,
+                live: document.getElementById(`m_live_${playerName}`).value,
+                speed: document.getElementById(`m_speed_${playerName}`).value,
+                smart: document.getElementById(`m_smart_${playerName}`).value,
+                focus: document.getElementById(`m_focus_${playerName}`).value,
+                flex: document.getElementById(`m_flex_${playerName}`).value,
+                hard: document.getElementById(`m_hard_${playerName}`).value,
+                skills: skillsData,
+                storyPoints: parseInt(document.getElementById(`m_sp_${playerName}`).innerText) || 0,
+                beliefs: document.getElementById(`m_beliefs_${playerName}`).value,
+                goals: document.getElementById(`m_goals_${playerName}`).value,
+                inventory: document.getElementById(`m_inventory_${playerName}`).value
+            };
+
+            gameState.sheets[playerName] = sheet;
+            if (socket && socket.connected) {
+                socket.emit('update_sheet', { room: currentUser.room, name: playerName, sheet });
+            }
+        }
+
+        function changeMasterStoryPoints(playerName, val) {
+            const spEl = document.getElementById(`m_sp_${playerName}`);
+            let current = parseInt(spEl.innerText) || 0;
+            current = Math.max(0, current + val);
+            spEl.innerText = current;
+            saveCharacterSheetByMaster(playerName);
+        }
+
         function loadPlayerSheetLocal() {
             document.getElementById('c_name').value = currentUser.name;
             const saved = localStorage.getItem(`kpms_sheet_${currentUser.name}`);
             if (saved) {
                 try {
-                    const sheet = JSON.parse(saved);
-                    document.getElementById('c_house').value = sheet.house || 'Гриффиндор';
-                    document.getElementById('c_school').value = sheet.school || 'Хогвартс';
-                    document.getElementById('c_year').value = sheet.year || '5';
-                    document.getElementById('c_job').value = sheet.job || '';
-                    document.getElementById('c_origin').value = sheet.origin || '';
-                    document.getElementById('c_fam').value = sheet.fam || '';
-                    document.getElementById('c_wood').value = sheet.wood || '';
-                    document.getElementById('c_length').value = sheet.length || '';
-                    document.getElementById('c_core').value = sheet.core || '';
-                    document.getElementById('st_live').value = sheet.live || '3';
-                    document.getElementById('st_speed').value = sheet.speed || '3';
-                    document.getElementById('st_smart').value = sheet.smart || '3';
-                    document.getElementById('st_focus').value = sheet.focus || '3';
-                    document.getElementById('st_flex').value = sheet.flex || '3';
-                    document.getElementById('st_hard').value = sheet.hard || '3';
-                    document.getElementById('c_beliefs').value = sheet.beliefs || '';
-                    document.getElementById('c_goals').value = sheet.goals || '';
-                    document.getElementById('c_inventory').value = sheet.inventory || '';
+                    applySheetToUI(JSON.parse(saved));
                 } catch(e) {}
             }
             saveCharacterSheet();
         }
 
+        function applySheetToUI(sheet) {
+            document.getElementById('c_house').value = sheet.house || 'Гриффиндор';
+            document.getElementById('c_school').value = sheet.school || 'Хогвартс';
+            document.getElementById('c_year').value = sheet.year || '5';
+            document.getElementById('c_job').value = sheet.job || '';
+            document.getElementById('c_origin').value = sheet.origin || '';
+            document.getElementById('c_fam').value = sheet.fam || '';
+            document.getElementById('c_wood').value = sheet.wood || '';
+            document.getElementById('c_length').value = sheet.length || '';
+            document.getElementById('c_core').value = sheet.core || '';
+            document.getElementById('st_live').value = sheet.live || '3';
+            document.getElementById('st_speed').value = sheet.speed || '3';
+            document.getElementById('st_smart').value = sheet.smart || '3';
+            document.getElementById('st_focus').value = sheet.focus || '3';
+            document.getElementById('st_flex').value = sheet.flex || '3';
+            document.getElementById('st_hard').value = sheet.hard || '3';
+            
+            if (sheet.skills) {
+                Object.keys(sheet.skills).forEach(k => {
+                    const el = document.getElementById(k);
+                    if (el) el.value = sheet.skills[k];
+                });
+            }
+            if (sheet.storyPoints !== undefined) {
+                storyPoints = sheet.storyPoints;
+                document.getElementById('storyPointsDisplay').innerText = storyPoints;
+            }
+
+            document.getElementById('c_beliefs').value = sheet.beliefs || '';
+            document.getElementById('c_goals').value = sheet.goals || '';
+            document.getElementById('c_inventory').value = sheet.inventory || '';
+        }
+
+        // Отрисовка всех чарлистов для Мастера с полным редактированием
         function renderAllSheetsMaster() {
             const container = document.getElementById('masterAllSheetsContainer');
             const sheets = gameState.sheets || {};
@@ -667,18 +820,53 @@
                 return;
             }
             container.innerHTML = keys.map(name => {
-                const s = sheets[name];
+                const s = sheets[name] || {};
+                const skillsObj = s.skills || {};
                 return `
-                    <div class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-xl space-y-2">
-                        <div class="flex justify-between items-center border-b border-[#5c4735]/20 pb-1">
-                            <span class="font-bold text-xs text-[#3b2a1a]">⚡ ${s.name || name} (${s.house || 'Факультет не указан'})</span>
-                            <span class="text-[10px] bg-[#d3c4b1] px-2 py-0.5 rounded">Год: ${s.year || '-'}</span>
+                    <div class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-2">
+                            <span class="font-bold text-sm text-[#3b2a1a]">⚡ Персонаж: ${s.name || name}</span>
+                            <div class="flex items-center space-x-2 text-xs">
+                                <span class="font-bold">Баллы:</span>
+                                <button onclick="changeMasterStoryPoints('${name}', -1)" class="px-1.5 bg-[#d3c4b1] rounded font-bold">-</button>
+                                <span id="m_sp_${name}" class="font-bold w-4 text-center">${s.storyPoints || 0}</span>
+                                <button onclick="changeMasterStoryPoints('${name}', 1)" class="px-1.5 bg-[#d3c4b1] rounded font-bold">+</button>
+                            </div>
                         </div>
-                        <div class="text-[11px] text-[#5c4735] space-y-1">
-                            <div><strong>Палочка:</strong> ${s.wood || 'Дерево не указано'}, ${s.length || ''}, ${s.core || ''}</div>
-                            <div><strong>Характеристики:</strong> Живучесть: ${s.live}, Скорость: ${s.speed}, Сообразительность: ${s.smart}, Сосредоточенность: ${s.focus}, Гибкость: ${s.flex}, Твёрдость: ${s.hard}</div>
-                            <div><strong>Инвентарь/Заметки:</strong> ${escapeHtml(s.inventory || 'Пусто')}</div>
+
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div><label class="font-bold text-[#5c4735]">Факультет</label><input type="text" id="m_house_${name}" value="${s.house || ''}" oninput="saveCharacterSheetByMaster('${name}')" class="parchment-input w-full px-1.5 py-0.5 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Курс</label><input type="text" id="m_year_${name}" value="${s.year || ''}" oninput="saveCharacterSheetByMaster('${name}')" class="parchment-input w-full px-1.5 py-0.5 rounded"></div>
                         </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Живуч.</span><input type="number" id="m_live_${name}" value="${s.live || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Скорость</span><input type="number" id="m_speed_${name}" value="${s.speed || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Сообр.</span><input type="number" id="m_smart_${name}" value="${s.smart || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Сосред.</span><input type="number" id="m_focus_${name}" value="${s.focus || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Гибкость</span><input type="number" id="m_flex_${name}" value="${s.flex || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                            <div class="bg-[#f5ece1] p-1 rounded"><span class="block font-bold">Твердость</span><input type="number" id="m_hard_${name}" value="${s.hard || 3}" oninput="saveCharacterSheetByMaster('${name}')" class="w-10 text-center parchment-input rounded"></div>
+                        </div>
+
+                        <div class="hidden"><input type="text" id="m_school_${name}" value="${s.school || 'Хогвартс'}"><input type="text" id="m_job_${name}" value="${s.job || ''}"><input type="text" id="m_origin_${name}" value="${s.origin || ''}"><input type="text" id="m_fam_${name}" value="${s.fam || ''}"><input type="text" id="m_wood_${name}" value="${s.wood || ''}"><input type="text" id="m_length_${name}" value="${s.length || ''}"><input type="text" id="m_core_${name}" value="${s.core || ''}"></div>
+
+                        <div class="text-xs space-y-1">
+                            <label class="font-bold text-[#5c4735]">Навыки (уровни)</label>
+                            <div class="grid grid-cols-2 gap-1 max-h-32 overflow-y-auto p-1 bg-[#f5ece1] rounded">
+                                ${SKILLS_LIST.map((sk, idx) => `
+                                    <div class="flex justify-between items-center text-[10px] px-1">
+                                        <span class="truncate">${sk}</span>
+                                        <input type="number" id="m_sk_${name}_${idx}" value="${skillsObj[`sk_${idx}`] || 0}" oninput="saveCharacterSheetByMaster('${name}')" class="w-7 h-4 text-center parchment-input rounded">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="text-xs space-y-1">
+                            <label class="font-bold text-[#5c4735]">Инвентарь и артефакты</label>
+                            <textarea id="m_inventory_${name}" oninput="saveCharacterSheetByMaster('${name}')" rows="2" class="parchment-input w-full p-1 rounded text-xs">${s.inventory || ''}</textarea>
+                        </div>
+                        <div class="hidden"><textarea id="m_beliefs_${name}">${s.beliefs || ''}</textarea><textarea id="m_goals_${name}">${s.goals || ''}</textarea></div>
                     </div>
                 `;
             }).join('');
