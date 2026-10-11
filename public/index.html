@@ -114,12 +114,17 @@
                     </div>
                 </div>
 
-                <div class="parchment-panel h-56 rounded-2xl flex flex-col overflow-hidden">
-                    <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30">
+                <!-- Чат с поддержкой картинок -->
+                <div class="parchment-panel h-60 rounded-2xl flex flex-col overflow-hidden">
+                    <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
                         <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]">💬 Общий чат сессии</span>
                     </div>
                     <div id="chatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-sm"></div>
-                    <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-2 border-t border-[#5c4735]/30 flex gap-2 bg-[#f5ece1]">
+                    <form id="chatForm" onsubmit="sendChatMessage(event)" class="p-2 border-t border-[#5c4735]/30 flex items-center gap-2 bg-[#f5ece1]">
+                        <!-- Кнопка прикрепления изображения -->
+                        <label title="Прикрепить изображение" class="cursor-pointer p-2 rounded-lg border border-[#5c4735] bg-[#d3c4b1] hover:bg-[#5c4735] hover:text-[#f5ece1] text-[#3b2a1a] transition-all flex items-center justify-center text-xs">
+                            🖼️ <input type="file" id="chatImageInput" accept="image/*" class="hidden" onchange="sendChatImage(event)">
+                        </label>
                         <input type="text" id="chatInput" placeholder="Введите реплику или действие..." class="parchment-input flex-1 px-3 py-2 rounded-lg text-sm">
                         <button type="submit" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-lg hover:bg-[#5c4735] transition-all text-xs uppercase">Отправить</button>
                     </form>
@@ -366,7 +371,6 @@
             socket.on('connect', () => {
                 updateConnectionStatus(true);
                 socket.emit('join_room', { room: currentUser.room, name: currentUser.name, role: currentUser.role });
-                // Сразу отправляем чарлист после коннекта
                 if (currentUser.role === 'player') {
                     saveCharacterSheet();
                 }
@@ -411,10 +415,30 @@
                 sender: currentUser.name,
                 role: currentUser.role,
                 text: text,
+                image: null,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             socket.emit('chat_message', { room: currentUser.room, message: msg });
             input.value = '';
+        }
+
+        // Отправка изображения в чат
+        function sendChatImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const msg = {
+                    sender: currentUser.name,
+                    role: currentUser.role,
+                    text: 'прикрепил(а) изображение:',
+                    image: e.target.result, // Base64 картинки
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                socket.emit('chat_message', { room: currentUser.room, message: msg });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ''; // Сбрасываем выбор файла
         }
 
         function renderChat() {
@@ -426,6 +450,7 @@
                         <span>${m.time}</span>
                     </div>
                     <div class="text-xs text-[#3b2a1a] mt-0.5">${escapeHtml(m.text)}</div>
+                    ${m.image ? `<div class="mt-2"><img src="${m.image}" class="max-h-48 rounded border border-[#5c4735]/40 object-contain shadow-sm" alt="Иллюстрация"></div>` : ''}
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
@@ -506,8 +531,6 @@
                 inventory: document.getElementById('c_inventory').value
             };
             localStorage.setItem(`kpms_sheet_${currentUser.name}`, JSON.stringify(sheet));
-            
-            // Безопасная отправка на сервер только при активном соединении
             if (socket && socket.connected) {
                 socket.emit('update_sheet', { room: currentUser.room, name: currentUser.name, sheet });
             }
@@ -573,6 +596,7 @@
             container.innerHTML = gameState.events.map(m => `
                 <div class="p-1.5 rounded bg-[#fcf8f2] border border-[#5c4735]/20 text-[11px]">
                     <span class="font-bold text-[#5c4735]">[${m.time}] ${m.sender}:</span> ${escapeHtml(m.text)}
+                    ${m.image ? `<div class="mt-1"><img src="${m.image}" class="max-h-36 rounded border border-[#5c4735]/40 object-contain shadow-sm" alt="Иллюстрация"></div>` : ''}
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
@@ -590,6 +614,7 @@
                 sender: currentUser.name,
                 role: currentUser.role,
                 text: `🎲 бросил кубики [${d1} + ${d2}] = ${sum}. Итог: ${resultText}`,
+                image: null,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             socket.emit('chat_message', { room: currentUser.room, message: msg });
