@@ -336,6 +336,7 @@
     <script>
         let socket;
         let currentUser = { name: '', role: 'player', room: 'hogwarts-1' };
+        // Массив токенов изначально пуст (нет лишних NPC)
         let gameState = { mapImage: '', tokens: [], sheets: {}, events: [] };
         let storyPoints = 0;
 
@@ -899,6 +900,11 @@
             socket.emit('update_tokens', { room: currentUser.room, tokens: gameState.tokens });
         }
 
+        function removeToken(id) {
+            gameState.tokens = gameState.tokens.filter(t => t.id !== id);
+            socket.emit('update_tokens', { room: currentUser.room, tokens: gameState.tokens });
+        }
+
         function renderMap() {
             document.getElementById('mapImageElement').src = gameState.mapImage || '';
             const layer = document.getElementById('tokensLayer');
@@ -906,8 +912,11 @@
                 <div draggable="true" ondragstart="dragToken(event, '${t.id}')" 
                      style="left: ${t.x}%; top: ${t.y}%;" 
                      class="absolute -translate-x-1/2 -translate-y-1/2 cursor-move pointer-events-auto flex flex-col items-center group">
-                    <div class="w-8 h-8 rounded-full bg-[#3b2a1a] border-2 border-[#f5ece1] text-[#f5ece1] font-bold text-xs flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        ${t.name.charAt(0).toUpperCase()}
+                    <div class="relative">
+                        <div class="w-8 h-8 rounded-full bg-[#3b2a1a] border-2 border-[#f5ece1] text-[#f5ece1] font-bold text-xs flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            ${t.name.charAt(0).toUpperCase()}
+                        </div>
+                        <button onclick="removeToken('${t.id}')" class="absolute -top-1 -right-1 w-4 h-4 bg-red-700 text-white rounded-full text-[9px] font-bold hidden group-hover:flex items-center justify-center border border-white shadow" title="Удалить токен">✕</button>
                     </div>
                     <span class="bg-[#3b2a1a]/80 text-[#f5ece1] text-[10px] px-1.5 py-0.5 rounded shadow mt-0.5 whitespace-nowrap">${t.name}</span>
                 </div>
