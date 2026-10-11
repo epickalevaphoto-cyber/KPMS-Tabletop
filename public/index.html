@@ -4,29 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>КПМБ — Клуб Прикладной Магической Безопасности | НРИ</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Socket.IO Client -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        parchment: {
-                            light: '#f5ece1',
-                            DEFAULT: '#d3c4b1',
-                            dark: '#b8a894',
-                        },
-                        ink: {
-                            DEFAULT: '#3b2a1a',
-                            dark: '#241a0f',
-                            light: '#5c4735',
-                        }
+                        parchment: { light: '#f5ece1', DEFAULT: '#d3c4b1', dark: '#b8a894' },
+                        ink: { DEFAULT: '#3b2a1a', dark: '#241a0f', light: '#5c4735' }
                     },
-                    fontFamily: {
-                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif']
-                    }
+                    fontFamily: { serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif'] }
                 }
             }
         }
@@ -54,17 +42,9 @@
             border-color: #3b2a1a;
             box-shadow: 0 0 0 2px rgba(92, 71, 53, 0.2);
         }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #d3c4b1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #5c4735;
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #d3c4b1; }
+        ::-webkit-scrollbar-thumb { background: #5c4735; border-radius: 3px; }
     </style>
 </head>
 <body class="h-full flex flex-col antialiased selection:bg-[#5c4735] selection:text-[#f5ece1]">
@@ -73,34 +53,26 @@
     <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
         <div class="parchment-panel max-w-md w-full p-8 rounded-2xl shadow-2xl text-center space-y-6">
             <div class="space-y-2 border-b border-[#5c4735]/30 pb-4">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-2 border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] text-2xl font-bold shadow-inner">
-                    КП
-                </div>
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-2 border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] text-2xl font-bold shadow-inner">КП</div>
                 <h1 class="text-3xl font-bold tracking-wide text-[#3b2a1a]">КПМБ</h1>
                 <p class="text-sm font-medium text-[#5c4735] italic">Клуб Прикладной Магической Безопасности</p>
             </div>
 
             <div class="flex rounded-full p-1 bg-[#d3c4b1] border border-[#5c4735]">
-                <button type="button" id="rolePlayerBtn" onclick="setRole('player')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all bg-[#5c4735] text-[#f5ece1] shadow">
-                    СОЗДАТЬ (Игрок)
-                </button>
-                <button type="button" id="roleMasterBtn" onclick="setRole('master')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all text-[#3b2a1a] hover:text-[#3b2a1a]">
-                    ВОЙТИ (Мастер)
-                </button>
+                <button type="button" id="rolePlayerBtn" onclick="setRole('player')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all bg-[#5c4735] text-[#f5ece1] shadow">СОЗДАТЬ (Игрок)</button>
+                <button type="button" id="roleMasterBtn" onclick="setRole('master')" class="flex-1 py-2 text-sm font-bold rounded-full transition-all text-[#3b2a1a]">ВОЙТИ (Мастер)</button>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-[#5c4735] mb-1">Имя персонажа / Мастера</label>
-                    <input type="text" id="usernameInput" required placeholder="Например: Артур Хаус-Дейтон" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm">
+                    <input type="text" id="usernameInput" required placeholder="Например: Гарри Поттер" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-[#5c4735] mb-1">Код комнаты</label>
-                    <input type="text" id="roomInput" required value="hogwarts-1" placeholder="hogwarts-1" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm font-mono">
+                    <input type="text" id="roomInput" required value="hogwarts-1" class="parchment-input w-full px-4 py-2.5 rounded-lg text-sm font-mono">
                 </div>
-                <button type="submit" class="w-full py-3 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-xl shadow-lg hover:bg-[#5c4735] transition-all tracking-wider uppercase text-sm border border-[#5c4735]">
-                    Войти в замок
-                </button>
+                <button type="submit" class="w-full py-3 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-xl shadow-lg hover:bg-[#5c4735] transition-all uppercase text-sm border border-[#5c4735]">Войти в замок</button>
             </form>
         </div>
     </div>
@@ -119,9 +91,7 @@
                 <span id="connectionStatus" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300">
                     <span class="w-2 h-2 mr-1.5 bg-amber-500 rounded-full animate-pulse"></span> Подключение...
                 </span>
-                <button onclick="logout()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-[#5c4735] text-[#3b2a1a] hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all">
-                    Выйти
-                </button>
+                <button onclick="logout()" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-[#5c4735] text-[#3b2a1a] hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all">Выйти</button>
             </div>
         </header>
 
@@ -131,7 +101,6 @@
                 <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden relative min-h-[300px]">
                     <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
                         <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]">🗺 Интерактивная карта</span>
-                        <!-- Элементы управления картой доступны ТОЛЬКО Мастеру -->
                         <div id="masterMapControls" class="hidden items-center space-x-2">
                             <label class="cursor-pointer px-2.5 py-1 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded hover:bg-[#5c4735] transition-all">
                                 📤 Загрузить карту <input type="file" id="mapImageLoader" accept="image/*" class="hidden" onchange="uploadMapImage(event)">
@@ -157,28 +126,23 @@
                 </div>
             </section>
 
-            <!-- ПРАВАЯ КОЛОНКА (Чарлист или Панель Мастера) -->
+            <!-- ПРАВАЯ КОЛОНКА (Чарлист по официальному шаблону или Панель Мастера) -->
             <section class="lg:col-span-5 flex flex-col gap-4 h-full overflow-hidden">
                 <div class="parchment-panel flex-1 rounded-2xl flex flex-col overflow-hidden">
                     <div class="px-4 py-2 bg-[#d3c4b1]/60 border-b border-[#5c4735]/30 flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]" id="rightPanelTitle">Интерактивный Чарлист</span>
-                        <!-- Вкладки Мастера -->
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#5c4735]" id="rightPanelTitle">Лист Персонажа КПМБ</span>
                         <div id="masterTabs" class="hidden flex space-x-1">
                             <button onclick="switchMasterTab('events')" id="tabEventsBtn" class="px-2 py-0.5 text-xs font-bold bg-[#3b2a1a] text-[#f5ece1] rounded">События</button>
                             <button onclick="switchMasterTab('sheets')" id="tabSheetsBtn" class="px-2 py-0.5 text-xs font-bold bg-[#d3c4b1] text-[#3b2a1a] rounded">Чарлисты игроков</button>
                         </div>
                     </div>
 
-                    <!-- Личный чарлист игрока (Участники видят только свой) -->
-                    <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Имя персонажа</label>
-                                <input type="text" id="charName" oninput="saveCharacterSheet()" class="parchment-input w-full px-3 py-1.5 rounded-lg text-sm font-medium">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Факультет</label>
-                                <select id="charHouse" onchange="saveCharacterSheet()" class="parchment-input w-full px-3 py-1.5 rounded-lg text-sm">
+                    <!-- ИГРОК: Официальный Чарлист (стр. 1) -->
+                    <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="font-bold text-[#5c4735]">Имя</label><input type="text" id="c_name" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Факультет</label>
+                                <select id="c_house" onchange="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded">
                                     <option value="Гриффиндор">Гриффиндор</option>
                                     <option value="Слизерин">Слизерин</option>
                                     <option value="Когтевран">Когтевран</option>
@@ -186,43 +150,57 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Палочка</label>
-                                <input type="text" id="charWand" oninput="saveCharacterSheet()" placeholder="Тис, 12 дюймов" class="parchment-input w-full px-3 py-1.5 rounded-lg text-xs">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-[#5c4735] mb-1">Состояние</label>
-                                <input type="text" id="charStatus" oninput="saveCharacterSheet()" placeholder="Здоров" class="parchment-input w-full px-3 py-1.5 rounded-lg text-xs">
-                            </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="font-bold text-[#5c4735]">Школа</label><input type="text" id="c_school" value="Хогвартс" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Год</label><input type="text" id="c_year" value="5" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Профессия</label><input type="text" id="c_job" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="font-bold text-[#5c4735]">Происхождение</label><input type="text" id="c_origin" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Фамильяр</label><input type="text" id="c_fam" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="font-bold text-[#5c4735]">Древесина</label><input type="text" id="c_wood" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Длина</label><input type="text" id="c_length" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Сердцевина</label><input type="text" id="c_core" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                        </div>
+                        <!-- Характеристики -->
+                        <div class="border-t border-[#5c4735]/30 pt-2 grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Живучесть</span><input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Скорость</span><input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Сообразительность</span><input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Сосредоточенность</span><input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Гибкость</span><input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                            <div class="bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/20"><span class="block font-bold">Твёрдость</span><input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" class="w-12 text-center parchment-input rounded font-bold"></div>
+                        </div>
+                        <!-- Убеждения и цели -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="font-bold text-[#5c4735]">Убеждения</label><textarea id="c_beliefs" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
+                            <div><label class="font-bold text-[#5c4735]">Цели</label><textarea id="c_goals" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-[#5c4735] mb-1">Заметки и инвентарь</label>
-                            <textarea id="charNotes" oninput="saveCharacterSheet()" rows="6" placeholder="Артефакты, зелья, цели..." class="parchment-input w-full px-3 py-2 rounded-lg text-xs"></textarea>
+                            <label class="font-bold text-[#5c4735]">Артефакты, инвентарь и заметки</label>
+                            <textarea id="c_inventory" oninput="saveCharacterSheet()" rows="3" class="parchment-input w-full p-1 rounded"></textarea>
                         </div>
                     </div>
 
-                    <!-- События для Мастера -->
+                    <!-- МАСТЕР: События -->
                     <div id="masterEventsContainer" class="hidden flex-1 p-4 overflow-y-auto space-y-2 text-xs font-mono">
                         <div class="text-[#5c4735] italic"># Сессия инициализирована.</div>
                     </div>
 
-                    <!-- Просмотр всех чарлистов (Только для Мастера) -->
+                    <!-- МАСТЕР: Чарлисты всех игроков -->
                     <div id="masterAllSheetsContainer" class="hidden flex-1 p-4 overflow-y-auto space-y-4"></div>
                 </div>
 
                 <!-- Нижняя панель с иконками -->
                 <div class="parchment-panel p-3 rounded-2xl flex items-center justify-end space-x-2">
-                    <!-- Кнопка генерации сценария (Строго для Мастера) -->
                     <div id="masterActionButtons" class="hidden flex items-center space-x-2 mr-auto border-r border-[#5c4735]/30 pr-3">
-                        <button onclick="openScenarioModal()" title="Генерация сценария" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base">
-                            🔄
-                        </button>
+                        <button onclick="openScenarioModal()" title="Генерация сценария" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base">🔄</button>
                     </div>
-
-                    <button onclick="openModal('rulesModal')" title="Книга правил (2d6)" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">📖</button>
-                    <button onclick="openModal('spellsModal')" title="Справочник заклинаний" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🪶</button>
-                    <button onclick="openModal('potionsModal')" title="Справочник зелий" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🧪</button>
+                    <button onclick="openModal('rulesModal')" title="Правила 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">📖</button>
+                    <button onclick="openModal('spellsModal')" title="Заклинания" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🪶</button>
+                    <button onclick="openModal('potionsModal')" title="Зелья" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#f5ece1] text-[#3b2a1a] flex items-center justify-center hover:bg-[#3b2a1a] hover:text-[#f5ece1] transition-all shadow-md text-base">🧪</button>
                     <button onclick="rollDice()" title="Бросок 2d6" class="w-10 h-10 rounded-full border border-[#5c4735] bg-[#3b2a1a] text-[#f5ece1] flex items-center justify-center hover:bg-[#5c4735] transition-all shadow-md text-base font-bold">🎲</button>
                 </div>
             </section>
@@ -248,9 +226,10 @@
                 <button onclick="closeModal('spellsModal')" class="font-bold text-[#5c4735]">✕</button>
             </div>
             <div class="flex-1 overflow-y-auto space-y-2 text-sm">
-                <div><strong>Люмос:</strong> Свет.</div>
-                <div><strong>Алохомора:</strong> Отпирание замков.</div>
-                <div><strong>Экспеллиармус:</strong> Обезоруживание.</div>
+                <div><strong>Акцио:</strong> Манящие чары.</div>
+                <div><strong>Алохомора:</strong> Отпирающие чары.</div>
+                <div><strong>Люмос:</strong> Световые чары.</div>
+                <div><strong>Экспеллиармус:</strong> Обезоруживающие чары.</div>
             </div>
             <div class="text-right"><button onclick="closeModal('spellsModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
         </div>
@@ -263,14 +242,14 @@
                 <button onclick="closeModal('potionsModal')" class="font-bold text-[#5c4735]">✕</button>
             </div>
             <div class="flex-1 overflow-y-auto space-y-2 text-sm">
+                <div><strong>Амортенция:</strong> Приворотное зелье.</div>
                 <div><strong>Оборотное зелье:</strong> Смена облика.</div>
-                <div><strong>Живая смерть:</strong> Сон.</div>
+                <div><strong>Костерост:</strong> Выращивание костей.</div>
             </div>
             <div class="text-right"><button onclick="closeModal('potionsModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
         </div>
     </div>
 
-    <!-- Модальное окно генератора (Только Мастер) -->
     <div id="scenarioModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#3b2a1a]/40 backdrop-blur-sm">
         <div class="parchment-panel max-w-xl w-full p-6 rounded-2xl shadow-2xl relative space-y-4">
             <div class="flex justify-between items-center border-b border-[#5c4735]/30 pb-3">
@@ -278,16 +257,14 @@
                 <button onclick="closeModal('scenarioModal')" class="font-bold text-[#5c4735]">✕</button>
             </div>
             <div class="space-y-4 text-sm">
-                <div id="scenarioOutput" class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-lg text-xs italic min-h-[60px] flex items-center">
-                    Нажмите кнопку генерации...
-                </div>
+                <div id="scenarioOutput" class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-lg text-xs italic min-h-[60px] flex items-center">Нажмите кнопку генерации...</div>
                 <button onclick="generateRandomScenario()" class="w-full py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold rounded-lg text-xs uppercase tracking-wider hover:bg-[#5c4735]">Сгенерировать</button>
             </div>
             <div class="text-right"><button onclick="closeModal('scenarioModal')" class="px-4 py-2 bg-[#5c4735] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
         </div>
     </div>
 
-    <!-- СКРИПТЫ КЛИЕНТА -->
+    <!-- СКРИПТЫ -->
     <script>
         let socket;
         let currentUser = { name: '', role: 'player', room: 'hogwarts-1' };
@@ -350,7 +327,7 @@
                 mmControls.classList.add('hidden');
                 mActions.classList.add('hidden');
                 mTabs.classList.add('hidden');
-                rTitle.innerText = "Интерактивный Чарлист";
+                rTitle.innerText = "Лист Персонажа КПМБ";
                 pSheet.classList.remove('hidden');
                 mEvents.classList.add('hidden');
                 loadPlayerSheetLocal();
@@ -506,26 +483,54 @@
         function saveCharacterSheet() {
             if (currentUser.role === 'master') return;
             const sheet = {
-                name: document.getElementById('charName').value,
-                house: document.getElementById('charHouse').value,
-                wand: document.getElementById('charWand').value,
-                status: document.getElementById('charStatus').value,
-                notes: document.getElementById('charNotes').value
+                name: document.getElementById('c_name').value,
+                house: document.getElementById('c_house').value,
+                school: document.getElementById('c_school').value,
+                year: document.getElementById('c_year').value,
+                job: document.getElementById('c_job').value,
+                origin: document.getElementById('c_origin').value,
+                fam: document.getElementById('c_fam').value,
+                wood: document.getElementById('c_wood').value,
+                length: document.getElementById('c_length').value,
+                core: document.getElementById('c_core').value,
+                live: document.getElementById('st_live').value,
+                speed: document.getElementById('st_speed').value,
+                smart: document.getElementById('st_smart').value,
+                focus: document.getElementById('st_focus').value,
+                flex: document.getElementById('st_flex').value,
+                hard: document.getElementById('st_hard').value,
+                beliefs: document.getElementById('c_beliefs').value,
+                goals: document.getElementById('c_goals').value,
+                inventory: document.getElementById('c_inventory').value
             };
             localStorage.setItem(`kpms_sheet_${currentUser.name}`, JSON.stringify(sheet));
             socket.emit('update_sheet', { room: currentUser.room, name: currentUser.name, sheet });
         }
 
         function loadPlayerSheetLocal() {
-            document.getElementById('charName').value = currentUser.name;
+            document.getElementById('c_name').value = currentUser.name;
             const saved = localStorage.getItem(`kpms_sheet_${currentUser.name}`);
             if (saved) {
                 try {
                     const sheet = JSON.parse(saved);
-                    document.getElementById('charHouse').value = sheet.house || 'Гриффиндор';
-                    document.getElementById('charWand').value = sheet.wand || '';
-                    document.getElementById('charStatus').value = sheet.status || '';
-                    document.getElementById('charNotes').value = sheet.notes || '';
+                    document.getElementById('c_house').value = sheet.house || 'Гриффиндор';
+                    document.getElementById('c_school').value = sheet.school || 'Хогвартс';
+                    document.getElementById('c_year').value = sheet.year || '5';
+                    document.getElementById('c_job').value = sheet.job || '';
+                    document.getElementById('c_origin').value = sheet.origin || '';
+                    document.getElementById('c_fam').value = sheet.fam || '';
+                    document.getElementById('c_wood').value = sheet.wood || '';
+                    document.getElementById('c_length').value = sheet.length || '';
+                    document.getElementById('c_core').value = sheet.core || '';
+                    document.getElementById('st_live').value = sheet.live || '3';
+                    document.getElementById('st_speed').value = sheet.speed || '3';
+                    document.getElementById('st_smart').value = sheet.smart || '3';
+                    document.getElementById('st_focus').value = sheet.focus || '3';
+                    document.getElementById('st_flex').value = sheet.flex || '3';
+                    document.getElementById('st_hard').value = sheet.hard || '3';
+                    document.getElementById('c_beliefs').value = sheet.beliefs || '';
+                    document.getElementById('c_goals').value = sheet.goals || '';
+                    document.getElementById('c_inventory').value = sheet.inventory || '';
                 } catch(e) {}
             }
             saveCharacterSheet();
@@ -544,12 +549,13 @@
                 return `
                     <div class="p-3 bg-[#fcf8f2] border border-[#5c4735]/40 rounded-xl space-y-2">
                         <div class="flex justify-between items-center border-b border-[#5c4735]/20 pb-1">
-                            <span class="font-bold text-xs text-[#3b2a1a]">⚡ ${s.name || name} (${s.house || ''})</span>
-                            <span class="text-[10px] bg-[#d3c4b1] px-2 py-0.5 rounded">${s.status || 'В норме'}</span>
+                            <span class="font-bold text-xs text-[#3b2a1a]">⚡ ${s.name || name} (${s.house || 'Факультет не указан'})</span>
+                            <span class="text-[10px] bg-[#d3c4b1] px-2 py-0.5 rounded">Год: ${s.year || '-'}</span>
                         </div>
                         <div class="text-[11px] text-[#5c4735] space-y-1">
-                            <div><strong>Палочка:</strong> ${s.wand || 'Нет'}</div>
-                            <div><strong>Заметки:</strong> ${escapeHtml(s.notes || 'Пусто')}</div>
+                            <div><strong>Палочка:</strong> ${s.wood || 'Дерево не указано'}, ${s.length || ''}, ${s.core || ''}</div>
+                            <div><strong>Характеристики:</strong> Живучесть: ${s.live}, Скорость: ${s.speed}, Сообразительность: ${s.smart}, Сосредоточенность: ${s.focus}, Гибкость: ${s.flex}, Твёрдость: ${s.hard}</div>
+                            <div><strong>Инвентарь/Заметки:</strong> ${escapeHtml(s.inventory || 'Пусто')}</div>
                         </div>
                     </div>
                 `;
