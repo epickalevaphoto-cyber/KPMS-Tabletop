@@ -157,7 +157,7 @@
                     <!-- ИГРОК: Чарлист -->
                     <div id="playerSheetContainer" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
                         <div class="text-[11px] text-[#5c4735] italic bg-[#d3c4b1]/30 p-2 rounded border border-[#5c4735]/30">
-                            💡 <strong>Подсказка:</strong> Нажмите на любой навык или характеристику, чтобы сделать автобросок 2d6!
+                            💡 <strong>Подсказка:</strong> Нажмите на любой навык или характеристику, чтобы сделать автобросок!
                         </div>
 
                         <div class="grid grid-cols-2 gap-2">
@@ -173,8 +173,10 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-2">
-                            <div><label class="font-bold text-[#5c4735]">Курс</label><input type="text" id="c_year" value="5" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded">
-                            </div>
+                            <div><label class="font-bold text-[#5c4735]">Школа</label><input type="text" id="c_school" value="Хогвартс" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Курс</label><input type="text" id="c_year" value="5" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                            <div><label class="font-bold text-[#5c4735]">Профессия</label><input type="text" id="c_job" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
+                        </div>
 
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="font-bold text-[#5c4735]">Происхождение</label><input type="text" id="c_origin" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
@@ -187,53 +189,55 @@
                             <div><label class="font-bold text-[#5c4735]">Сердцевина</label><input type="text" id="c_core" oninput="saveCharacterSheet()" class="parchment-input w-full px-2 py-1 rounded"></div>
                         </div>
 
-                        <div class="border-t border-[#5c4735]/30 pt-2">
-                            <span class="font-bold text-[#5c4735] block mb-1 uppercase tracking-wider text-[10px]">Характеристики</span>
-                            <div class="grid grid-cols-3 gap-2 text-center">
-                                <div onclick="rollStat('Живучесть', 'st_live')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Живучесть 🎲</span>
-                                    <input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                        <!-- ХАРАКТЕРИСТИКИ И СЮЖЕТНЫЕ БАЛЛЫ В ОДНОЙ СТРОКЕ -->
+                        <div class="border-t border-[#5c4735]/30 pt-3 grid grid-cols-12 gap-3 items-center">
+                            <div class="col-span-8">
+                                <span class="font-bold text-[#5c4735] block mb-1 uppercase tracking-wider text-[10px]">Характеристики</span>
+                                <div class="grid grid-cols-3 gap-1.5 text-center">
+                                    <div onclick="rollStat('Живучесть', 'st_live')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Живуч. 🎲</span>
+                                        <input type="number" id="st_live" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
+                                    <div onclick="rollStat('Скорость', 'st_speed')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Скорость 🎲</span>
+                                        <input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
+                                    <div onclick="rollStat('Сообразительность', 'st_smart')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Сообр. 🎲</span>
+                                        <input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
+                                    <div onclick="rollStat('Сосредоточенность', 'st_focus')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Сосред. 🎲</span>
+                                        <input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
+                                    <div onclick="rollStat('Гибкость', 'st_flex')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Гибкость 🎲</span>
+                                        <input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
+                                    <div onclick="rollStat('Твёрдость', 'st_hard')" class="clickable-stat bg-[#fcf8f2] p-1 rounded border border-[#5c4735]/30 shadow-sm">
+                                        <span class="block font-bold text-[10px] truncate">Твёрдость 🎲</span>
+                                        <input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-10 text-center parchment-input rounded font-bold mt-0.5 text-xs">
+                                    </div>
                                 </div>
-                                <div onclick="rollStat('Скорость', 'st_speed')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Скорость 🎲</span>
-                                    <input type="number" id="st_speed" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                                </div>
-                                <div onclick="rollStat('Сообразительность', 'st_smart')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Сообразительность 🎲</span>
-                                    <input type="number" id="st_smart" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                                </div>
-                                <div onclick="rollStat('Сосредоточенность', 'st_focus')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Сосредоточенность 🎲</span>
-                                    <input type="number" id="st_focus" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                                </div>
-                                <div onclick="rollStat('Гибкость', 'st_flex')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Гибкость 🎲</span>
-                                    <input type="number" id="st_flex" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
-                                </div>
-                                <div onclick="rollStat('Твёрдость', 'st_hard')" class="clickable-stat bg-[#fcf8f2] p-1.5 rounded border border-[#5c4735]/30 shadow-sm">
-                                    <span class="block font-bold text-[11px] underline decoration-dotted">Твёрдость 🎲</span>
-                                    <input type="number" id="st_hard" value="3" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-12 text-center parchment-input rounded font-bold mt-1">
+                            </div>
+
+                            <div class="col-span-4 bg-[#fcf8f2] p-2 rounded-xl border border-[#5c4735]/30 flex flex-col items-center justify-center space-y-1 h-full shadow-sm">
+                                <span class="font-bold text-[#5c4735] text-[10px] text-center leading-tight">⚡ Сюжетные баллы</span>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="changeStoryPoints(-1)" class="w-6 h-6 bg-[#d3c4b1] font-bold rounded flex items-center justify-center hover:bg-[#5c4735] hover:text-[#f5ece1] transition-all text-xs">-</button>
+                                    <span id="storyPointsDisplay" class="font-bold text-base w-5 text-center">0</span>
+                                    <button onclick="changeStoryPoints(1)" class="w-6 h-6 bg-[#d3c4b1] font-bold rounded flex items-center justify-center hover:bg-[#5c4735] hover:text-[#f5ece1] transition-all text-xs">+</button>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- НАВЫКИ НА ВСЮ ШИРИНУ СНИЗУ -->
                         <div class="border-t border-[#5c4735]/30 pt-3">
                             <span class="font-bold text-[#5c4735] block mb-2 uppercase tracking-wider text-[11px] text-center border-b border-[#5c4735]/20 pb-1">✦ Навыки ✦</span>
-                            <div id="skillsGridContainer" class="grid grid-cols-1 md:grid-cols-3 gap-1.5"></div>
+                            <div id="skillsGridContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
                         </div>
 
-                        <div class="border-t border-[#5c4735]/30 pt-3 space-y-3">
-                            <div class="flex items-center justify-between bg-[#fcf8f2] p-2 rounded border border-[#5c4735]/30">
-                                <span class="font-bold text-[#5c4735]">⚡ Сюжетные баллы</span>
-                                <div class="flex items-center space-x-2">
-                                    <button onclick="changeStoryPoints(-1)" class="px-2 py-0.5 bg-[#d3c4b1] font-bold rounded hover:bg-[#5c4735] hover:text-[#f5ece1]">-</button>
-                                    <span id="storyPointsDisplay" class="font-bold text-sm w-6 text-center">0</span>
-                                    <button onclick="changeStoryPoints(1)" class="px-2 py-0.5 bg-[#d3c4b1] font-bold rounded hover:bg-[#5c4735] hover:text-[#f5ece1]">+</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#5c4735]/30">
                             <div><label class="font-bold text-[#5c4735]">Убеждения</label><textarea id="c_beliefs" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
                             <div><label class="font-bold text-[#5c4735]">Цели</label><textarea id="c_goals" oninput="saveCharacterSheet()" rows="2" class="parchment-input w-full p-1 rounded"></textarea></div>
                         </div>
@@ -281,10 +285,10 @@
             </div>
             <ul class="text-xs space-y-2 list-disc pl-4">
                 <li><strong>Игровой цикл:</strong> Рассказчица описывает ситуацию, вы озвучиваете намерение и подход. Успех проверяется броском: <code>1D + Характеристика + Навык</code>.</li>
-                <li><strong>Сложность бросков:</strong> Успех достигается, если результат равен или превышает целевое значение (от элементарных задач 3+ до недостижимых 25+).</li>
+                <li><strong>Сложность бросков:</strong> Успех достигается, если результат равен или превышает целевое значение (от 3+ до 25+).</li>
                 <li><strong>Освоение магии:</strong> Заклинания и зелья имеют уровень сложности. Тренировки снижают сложность до нуля, после чего магия срабатывает автоматически.</li>
                 <li><strong>Бой и дуэли:</strong> Раунды длятся по 3 секунды (по 2 действия на ход). Основная защита от магии — щитовые чары <strong>Протего</strong>.</li>
-                <li><strong>Здоровье и раны:</strong> Состояния накладывают штрафы. Серьёзные травмы (от 3-го круга) требуют медицинского вмешательства и проверок навыка <em>Исцеления</em>.</li>
+                <li><strong>Здоровье и раны:</strong> Состояния накладывают штрафы. Серьёзные травмы (от 3-го круга) требуют медицинского вмешательства.</li>
             </ul>
             <div class="text-right"><button onclick="closeModal('rulesModal')" class="px-4 py-2 bg-[#3b2a1a] text-[#f5ece1] font-bold text-xs rounded-lg uppercase">Закрыть</button></div>
         </div>
@@ -347,231 +351,235 @@
             "Уход за магическими существами", "Хитрость*", "Чары"
         ];
 
-        // Все заклинания из официальных карточек
         const SPELLS_DB = [
-            { name: "Авада Кедавра", type: "Проклятие", diff: 18, desc: "Вызывает мгновенную смерть. Нет контрзаклятия, можно уклониться или закрыться объектом[cite: 468]." },
-            { name: "Авис", type: "Трансфигурация", diff: 21, desc: "Создает стайку отвлекающих птиц[cite: 469]." },
-            { name: "Авифорс", type: "Трансфигурация", diff: 12, desc: "Преобразует небольшие объекты в крошечных птичек[cite: 470]." },
-            { name: "Агуаменти", type: "Трансфигурация", diff: 18, desc: "Материализует воду (от струйки до волны)[cite: 471]." },
-            { name: "Адское пламя", type: "Проклятие", diff: 18, desc: "Зачарованное пламя огромного жара (урон 12D), требующее постоянного контроля[cite: 472]." },
-            { name: "Акцио", type: "Чары", diff: 12, desc: "Призывает объект к заклинателю[cite: 473]." },
-            { name: "Аларте Аскендаре", type: "Чары", diff: 12, desc: "Подбрасывает цель на высоту до трёх метров[cite: 474]." },
-            { name: "Алохомора", type: "Чары", diff: 12, desc: "Отпирает двери и другие объекты[cite: 475]." },
-            { name: "Амато Анимо Анимато (Анимагус)", type: "Трансфигурация", diff: 21, desc: "Часть процесса обретения способности превращаться в животное[cite: 476]." },
-            { name: "Анапнео", type: "Трансфигурация", diff: 15, desc: "Очищает дыхательные пути и горло, устраняя закупорку[cite: 477]." },
-            { name: "Антитрансгрессионное заклятие", type: "Сглаз", diff: 15, desc: "Подавляет Антитрансгрессионные чары в области[cite: 478]." },
-            { name: "Антитрансгрессионные чары", type: "Чары", diff: 15, desc: "Предотвращают трансгрессию из области и появление в ней[cite: 479]." },
-            { name: "Апарекиум", type: "Чары", diff: 12, desc: "Раскрывает тайные послания невидимыми чернилами[cite: 480]." },
-            { name: "Арресто моментум", type: "Чары", diff: 12, desc: "Замедляет движения цели или смягчает падение[cite: 481]." },
-            { name: "Атмосферные чары", type: "Чары", diff: 12, desc: "Локализованные погодные чары в помещении[cite: 482]." },
-            { name: "Баубиллиус", type: "Чары", diff: 12, desc: "Испускает белые искры (урон 3D+Сосредоточенность)[cite: 483]." },
-            { name: "Бомбарда", type: "Чары", diff: 12, desc: "Создает пробоину в физической конструкции[cite: 484]." },
-            { name: "Бомбарда Максима", type: "Чары", diff: 15, desc: "Создает большую пробоину в сооружении[cite: 485]." },
-            { name: "Брахиам Эмендо", type: "Чары", diff: 18, desc: "Сращивает сломанные кости[cite: 486]." },
-            { name: "Ваддивази", type: "Чары", diff: 12, desc: "Заставляет предмет лететь на высокой скорости (отвлечение)[cite: 487]." },
-            { name: "Вердимилиус", type: "Чары", diff: 12, desc: "Испускает зелёные искры (урон 3D+Сосредоточенность)[cite: 488]." },
-            { name: "Вермиллиус", type: "Чары", diff: 12, desc: "Испускает красные искры (урон 3D+Сосредоточенность)[cite: 489]." },
-            { name: "Веселящие чары", type: "Чары", diff: 9, desc: "Заставляет цель чувствовать себя счастливой[cite: 490]." },
-            { name: "Вингардиум Левиоса", type: "Чары", diff: 9, desc: "Левитационные чары для неодушевленных предметов[cite: 491]." },
-            { name: "Випера Эванеско", type: "Трансфигурация", diff: 12, desc: "Заклинание изгнания змей[cite: 492]." },
-            { name: "Воздвигнись", type: "Чары", diff: 12, desc: "Раскрывает и устанавливает палатку[cite: 493]." },
-            { name: "Возрастная линия", type: "Чары", diff: 15, desc: "Не допускает людей определенного возраста[cite: 494]." },
-            { name: "Волшебный огонь", type: "Чары", diff: 9, desc: "Вызывает безопасное голубое пламя[cite: 495]." },
-            { name: "Воющие чары", type: "Чары", diff: 12, desc: "Предупреждают о входе в охраняемую зону визгом[cite: 496]." },
-            { name: "Вспыхни", type: "Проклятие", diff: 15, desc: "Взрывающее заклятие (урон 6D+Сосредоточенность+30)[cite: 497]." },
-            { name: "Вулнера Санентур", type: "Чары", diff: 18, desc: "Исцеляет серьёзные раны в три приема[cite: 498]." },
-            { name: "Глиссео", type: "Чары", diff: 15, desc: "Делает поверхность идеально ровной (горкой)[cite: 499]." },
-            { name: "Гоменум ревелио", type: "Чары", diff: 15, desc: "Проявляющие чары, раскрывающие присутствие людей[cite: 500]." },
-            { name: "Гомункуловы чары", type: "Чары", diff: 15, desc: "Добавляют движущиеся точки на карту[cite: 501]." },
-            { name: "Дантисимус", type: "Порча", diff: 12, desc: "Заставляет зубы цели быстро расти[cite: 502]." },
-            { name: "Дезиллюминационное заклинание", type: "Чары", diff: 15, desc: "Чары хамелеона (неотличимость от обстановки)[cite: 503]." },
-            { name: "Делетриүс", type: "Чары", diff: 12, desc: "Разрушает следы и эффекты некоторых заклинаний[cite: 504]." },
-            { name: "Депримо", type: "Чары", diff: 15, desc: "Создает взрывом большие отверстия в земле[cite: 505]." },
-            { name: "Депульсо", type: "Чары", diff: 12, desc: "Отталкивающие чары[cite: 506]." },
-            { name: "Десцендо", type: "Чары", diff: 12, desc: "Заставляет объект двигаться вниз[cite: 507]." },
-            { name: "Дефодио", type: "Чары", diff: 15, desc: "Чары долота для выкапывания каналов[cite: 508]." },
-            { name: "Джеминио", type: "Чары", diff: 15, desc: "Заклятие Умножения (дублирует объект)[cite: 509]." },
-            { name: "Диминуендо", type: "Чары", diff: 15, desc: "Уменьшает объекты[cite: 510]." },
-            { name: "Диффиндо", type: "Чары", diff: 9, desc: "Режущее заклинание[cite: 511]." },
-            { name: "Драконифорс", type: "Трансфигурация", diff: 12, desc: "Преобразует мелкие объекты в детёнышей драконов[cite: 512]." },
-            { name: "Дуро", type: "Чары", diff: 12, desc: "Превращает объект в камень[cite: 513]." },
-            { name: "Жалящее заклинание", type: "Сглаз", diff: 15, desc: "Вызывает болезненный красный рубец[cite: 514]." },
-            { name: "Заговор Обмена", type: "Трансфигурация", diff: 15, desc: "Меняет местами любые два объекта[cite: 515]." },
-            { name: "Заклинание вечного приклеивания", type: "Чары", diff: 12, desc: "Привязывает объект к другому намертво[cite: 516]." },
-            { name: "Заклинание головного пузыря", type: "Чары", diff: 12, desc: "Создает пузырь воздуха для дыхания[cite: 517]." },
-            { name: "Заклинание заметания следов", type: "Чары", diff: 9, desc: "Удаляет любые следы перемещения[cite: 518]." },
-            { name: "Заклинание Обращения", type: "Чары", diff: 18, desc: "Временно возвращает оборотня в человеческую форму[cite: 519]." },
-            { name: "Заклинание Подзаправки", type: "Чары", diff: 15, desc: "Наполняет контейнер прежним напитком[cite: 520]." },
-            { name: "Заклинание Табу", type: "Проклятие", diff: 18, desc: "Обозначает слово как сигнал местоположения[cite: 521]." },
-            { name: "Заклятие Недосягаемости", type: "Чары", diff: 15, desc: "Создает невидимый магический барьер[cite: 522]." },
-            { name: "Заклятие Неразбиваемости", type: "Чары", diff: 15, desc: "Делает объект неразбиваемым[cite: 523]." },
-            { name: "Заклятие против проникновения", type: "Сглаз", diff: 15, desc: "Предотвращает проникновение физическими средствами[cite: 524]." },
-            { name: "Заклятие Пылающей руки", type: "Проклятие", diff: 15, desc: "Заставляет объекты обжигать при касании[cite: 525]." },
-            { name: "Иммобулюс", type: "Чары", diff: 15, desc: "Обездвиживает и останавливает цели[cite: 526]." },
-            { name: "Импедимента", type: "Сглаз", diff: 15, desc: "Чары Помех (жертва теряет два действия)[cite: 527]." },
-            { name: "Импервиус", type: "Чары", diff: 9, desc: "Заставляет объект отталкивать воду и туман[cite: 528]." },
-            { name: "Империо", type: "Проклятие", diff: 18, desc: "Помещает субъекта под полный контроль заклинателя[cite: 529]." },
-            { name: "Инкарцеро", type: "Трансфигурация", diff: 21, desc: "Связывающее заклинание (путы, веревки)[cite: 530]." },
-            { name: "Инсендио", type: "Трансфигурация", diff: 12, desc: "Чары воспламенения (струя пламени)[cite: 531]." },
-            { name: "Инфлэтус", type: "Чары", diff: 12, desc: "Надувает создание словно воздушный шар[cite: 532]." },
-            { name: "Каве инимикум", type: "Чары", diff: 15, desc: "Создает невидимый барьер, скрывающий заклинателя[cite: 533]." },
-            { name: "Капациус Экстремис", type: "Чары", diff: 18, desc: "Увеличивает внутренние размеры контейнера[cite: 534]." },
-            { name: "Карпе Ретрактум", type: "Чары", diff: 12, desc: "Творит шнур из света для притяжения или лазания[cite: 535]." },
-            { name: "Квиетус", type: "Чары", diff: 12, desc: "Приглушает звуки (контрчары к Сонорус)[cite: 536]." },
-            { name: "Коллопортус", type: "Чары", diff: 12, desc: "Запирающие чары (запечатывает двери)[cite: 537]." },
-            { name: "Коловария", type: "Чары", diff: 12, desc: "Меняет цвет предмета или животного[cite: 538]." },
-            { name: "Конфундус", type: "Чары", diff: 15, desc: "Чары замешательства и дезориентации[cite: 539]." },
-            { name: "Коньюнктивитус", type: "Проклятие", diff: 15, desc: "Раздражает глаза противника, ухудшая зрение[cite: 540]." },
-            { name: "Кринис Муто", type: "Трансфигурация", diff: 12, desc: "Меняет прическу и цвет волос[cite: 541]." },
-            { name: "Круциатус", type: "Проклятие", diff: 18, desc: "Причиняет мучительную боль (Проклятие Пытки)[cite: 542]." },
-            { name: "Левикорпус", type: "Сглаз", diff: 15, desc: "Подвешивает человека вниз головой за лодыжку[cite: 543]." },
-            { name: "Легилименс", type: "Чары", diff: 18, desc: "Проникает в сознание, читая мысли и воспоминания[cite: 544]." },
-            { name: "Летательные чары", type: "Чары", diff: 15, desc: "Заставляет летать мётлы, ковры и машины[cite: 545]." },
-            { name: "Либеракорпус", type: "Контрсглаз", diff: 12, desc: "Противостоит сглазу Левикорпус[cite: 546]." },
-            { name: "Локомотор", type: "Чары", diff: 9, desc: "Чары передвижения левитирующих предметов[cite: 547]." },
-            { name: "Локомотор Мортис", type: "Проклятие", diff: 15, desc: "Склеивает вместе ноги жертвы[cite: 548]." },
-            { name: "Люмос", type: "Чары", diff: 9, desc: "Заживляет огонёк света на конце палочки[cite: 549]." },
-            { name: "Метео Реканто", type: "Чары", diff: 12, desc: "Отменяет погодные чары[cite: 550]." },
-            { name: "Мимбл Вимбл", type: "Проклятие", diff: 12, desc: "Заклятие косноязычия, мешающее говорить[cite: 551]." },
-            { name: "Мобилиарбус", type: "Чары", diff: 9, desc: "Перемещает деревянный объект[cite: 552]." },
-            { name: "Мобиликорпус", type: "Чары", diff: 15, desc: "Перемещает тело по воздуху словно марионетку[cite: 553]." },
-            { name: "Моллиар", type: "Чары", diff: 12, desc: "Амортизирующие чары для смягчения посадки[cite: 554]." },
-            { name: "Мортмордре", type: "Проклятие", diff: 12, desc: "Создает Чёрную Метку в небе[cite: 555]." },
-            { name: "Мукус Ад Нозем", type: "Проклятие", diff: 12, desc: "Вызывает сильный насморк и озноб[cite: 556]." },
-            { name: "Непреложный обет", type: "Чары", diff: 18, desc: "Клятва, нарушение которой ведет к смерти[cite: 557]." },
-            { name: "Ножное заклятие", type: "Сглаз", diff: 15, desc: "Заклинание ватных ног[cite: 558]." },
-            { name: "Нокс", type: "Чары", diff: 12, desc: "Гасит свет палочки (контрчары Люмос)[cite: 559]." },
-            { name: "Облегчающие чары", type: "Чары", diff: 12, desc: "Делает предмет лёгким, как пёрышко[cite: 560]." },
-            { name: "Обливиэйт", type: "Чары", diff: 18, desc: "Чары памяти (стирает воспоминания)[cite: 561]." },
-            { name: "Обскуро", type: "Трансфигурация", diff: 21, desc: "Создает на глазах повязку[cite: 562]." },
-            { name: "Оглохни", type: "Чары", diff: 12, desc: "Вызывает жужжание в ушах окружающих[cite: 563]." },
-            { name: "Оппуньо", type: "Сглаз", diff: 15, desc: "Направляет объекты или существ в атаку[cite: 564]." },
-            { name: "Орхидеус", type: "Трансфигурация", diff: 21, desc: "Вызывает букет цветов из палочки[cite: 565]." },
-            { name: "Остолбеней", type: "Чары", diff: 15, desc: "Оглушающее заклятие, лишающее сознания[cite: 566]." },
-            { name: "Петрификус Тоталус", type: "Чары", diff: 15, desc: "Полное оцепенение тела[cite: 568]." },
-            { name: "Пиертотум Локомотор", type: "Чары", diff: 18, desc: "Оживляет статуи и доспехи[cite: 569]." },
-            { name: "Портус", type: "Чары", diff: 21, desc: "Превращает предмет в портключ[cite: 570]." },
-            { name: "Приори Инкантатем", type: "Чары", diff: 15, desc: "Показывает отголосок последнего заклинания палочки[cite: 571]." },
-            { name: "Протеевы чары", type: "Чары", diff: 18, desc: "Связывает несколько объектов для передачи информации[cite: 572]." },
-            { name: "Протего", type: "Чары", diff: 15, desc: "Щитовые чары против заклинаний и атак[cite: 573]." },
-            { name: "Протего Тоталүм", type: "Чары", diff: 18, desc: "Защитные чары области[cite: 574]." },
-            { name: "Протего Хоррибилис", type: "Чары", diff: 21, desc: "Защита от Тёмных искусств[cite: 575]." },
-            { name: "Ревелио", type: "Чары", diff: 15, desc: "Проявляющие чары[cite: 576]." },
-            { name: "Редукто", type: "Проклятие", diff: 15, desc: "Разрушает твердые предметы[cite: 577]." },
-            { name: "Редуцио", type: "Чары", diff: 12, desc: "Уменьшает увеличенные объекты[cite: 578]." },
-            { name: "Релашио", type: "Чары", diff: 12, desc: "Заставляет цель отпустить то, за что она держится[cite: 579]." },
-            { name: "Ренервейт", type: "Чары", diff: 12, desc: "Контрчары для оживления оглушенных[cite: 580]." },
-            { name: "Репаро", type: "Чары", diff: 12, desc: "Чинит сломанные предметы[cite: 581]." },
-            { name: "Репелло Иннимикум", type: "Чары", diff: 18, desc: "Отпугивает заклинателей и врагов[cite: 582]." },
-            { name: "Репелло Маглетум", type: "Чары", diff: 15, desc: "Антимагловские чары[cite: 583]." },
-            { name: "Ридикулус", type: "Чары", diff: 15, desc: "Превращает боггарта в смешной образ[cite: 584]." },
-            { name: "Риктусемпра", type: "Чары", diff: 12, desc: "Щекочущее заклятие[cite: 585]." },
-            { name: "Сальвио Гекенia", type: "Чары", diff: 15, desc: "Защитные чары от сглазов[cite: 586]." },
-            { name: "Сглаз метлы", type: "Сглаз", diff: 12, desc: "Нарушает управление метлой[cite: 587]." },
-            { name: "Сектумсемпра", type: "Проклятие", diff: 18, desc: "Наносит глубокие резаные раны[cite: 588]." },
-            { name: "Серпенсортия", type: "Чары", diff: 21, desc: "Вызывает змею из кончика палочки[cite: 589]." },
-            { name: "Силенцио", type: "Чары", diff: 15, desc: "Лишает цель возможности издавать звуки[cite: 590]." },
-            { name: "Систем Аперио", type: "Чары", diff: 9, desc: "Разрывает замки и сундуки[cite: 591]." },
-            { name: "Слагulus Эрукто", type: "Проклятие", diff: 12, desc: "Заставляет жертву изрыгать слизней[cite: 592]." },
-            { name: "Сонорус", type: "Чары", diff: 12, desc: "Усиливает громкость голоса[cite: 593]." },
-            { name: "Спанджифай", type: "Чары", diff: 12, desc: "Делает поверхность упругой (батут)[cite: 594]." },
-            { name: "Специалис Ревелио", type: "Чары", diff: 15, desc: "Показывает скрытые чары и зелья[cite: 595]." },
-            { name: "Спотыкающийся сглаз", type: "Сглаз", diff: 12, desc: "Заставляет цель спотыкаться[cite: 596]." },
-            { name: "Таранталлегра", type: "Сглаз", diff: 15, desc: "Заставляет ноги танцевать против воли[cite: 597]." },
-            { name: "Тергео", type: "Чары", diff: 12, desc: "Удаляет жидкость или грязь с поверхности[cite: 598]." },
-            { name: "Трансгрессия", type: "Телепортация", diff: 18, desc: "Мгновенное перемещение в пространстве[cite: 599]." },
-            { name: "Упаковывающие чары", type: "Чары", diff: 9, desc: "Магически упаковывает вещи в чемодан[cite: 600]." },
-            { name: "Фера Верто", type: "Трансфигурация", diff: 12, desc: "Превращает животных в кубки[cite: 601]." },
-            { name: "Ферула", type: "Чары", diff: 21, desc: "Создает шины и бинты для переломов[cite: 602]." },
-            { name: "Фианто Дури", type: "Чары", diff: 18, desc: "Укрепляет защитные чары[cite: 603]." },
-            { name: "Фиделиус", type: "Чары", diff: 18, desc: "Прячет тайну внутри души Хранителя[cite: 604]." },
-            { name: "Фините Инкантатем", type: "Чары", diff: 15, desc: "Массовое контрзаклинание[cite: 605]." },
-            { name: "Финнифорс", type: "Трансфигурация", diff: 12, desc: "Превращает небольшие предметы в пингвинов[cite: 606]." },
-            { name: "Флагрейт", type: "Чары", diff: 9, desc: "Оставляет огненные метки[cite: 607]." },
-            { name: "Флиппендо", type: "Чары", diff: 12, desc: "Отталкивает противников или предметы[cite: 608]." },
-            { name: "Фурункулюс", type: "Сглаз", diff: 12, desc: "Покрывает кожу фурункулами[cite: 609]." },
-            { name: "Чары горячего воздуха", type: "Чары", diff: 9, desc: "Выдувает струю горячего воздуха[cite: 610]." },
-            { name: "Чары заморозки огня", type: "Чары", diff: 12, desc: "Делает огонь безопасным и приятным[cite: 611]." },
-            { name: "Чары ложной памяти", type: "Чары", diff: 21, desc: "Внедряет ложные воспоминания[cite: 612]." },
-            { name: "Чары осушения", type: "Чары", diff: 12, desc: "Осушает водоёмы и лужи[cite: 613]." },
-            { name: "Чары тушения огня", type: "Чары", diff: 9, desc: "Тушит открытое пламя[cite: 614]." },
-            { name: "Эванеско", type: "Трансфигурация", diff: 18, desc: "Исчезновение объектов[cite: 615]." },
-            { name: "Эверте Статум", type: "Чары", diff: 12, desc: "Отбрасывает цель с сильным ударом[cite: 616]." },
-            { name: "Эспекто патронум", type: "Чары", diff: 21, desc: "Создает защитного Патронуса от дементоров[cite: 617]." },
-            { name: "Экспеллиармус", type: "Чары", diff: 12, desc: "Обезоруживающее заклинание[cite: 619]." },
-            { name: "Экспульсо", type: "Проклятие", diff: 15, desc: "Взрывная волна, отбрасывающая цель[cite: 620]." },
-            { name: "Эскуро", type: "Чары", diff: 12, desc: "Очищает испачканные предметы[cite: 621]." },
-            { name: "Энгоргио", type: "Чары", diff: 12, desc: "Увеличивает объект в размерах[cite: 622]." },
-            { name: "Эпискен", type: "Чары", diff: 12, desc: "Быстро залечивает мелкие переломы (например, нос)[cite: 623]." }
+            { name: "Авада Кедавра", type: "Проклятие", diff: 18, desc: "Вызывает мгновенную смерть. Нет контрзаклятия, можно уклониться или закрыться объектом." },
+            { name: "Авис", type: "Трансфигурация", diff: 21, desc: "Создает стайку отвлекающих птиц." },
+            { name: "Авифорс", type: "Трансфигурация", diff: 12, desc: "Преобразует небольшие объекты в крошечных птичек." },
+            { name: "Агуаменти", type: "Трансфигурация", diff: 18, desc: "Материализует воду (от струйки до волны)." },
+            { name: "Адское пламя", type: "Проклятие", diff: 18, desc: "Зачарованное пламя огромного жара (урон 12D), требующее постоянного контроля." },
+            { name: "Акцио", type: "Чары", diff: 12, desc: "Призывает объект к заклинателю." },
+            { name: "Аларте Аскендаре", type: "Чары", diff: 12, desc: "Подбрасывает цель на высоту до трёх метров." },
+            { name: "Алохомора", type: "Чары", diff: 12, desc: "Отпирает двери и другие объекты." },
+            { name: "Амато Анимо Анимато (Анимагус)", type: "Трансфигурация", diff: 21, desc: "Часть процесса обретения способности превращаться в животное." },
+            { name: "Анапнео", type: "Трансфигурация", diff: 15, desc: "Очищает дыхательные пути и горло, устраняя закупорку." },
+            { name: "Антитрансгрессионное заклятие", type: "Сглаз", diff: 15, desc: "Подавляет Антитрансгрессионные чары в области." },
+            { name: "Антитрансгрессионные чары", type: "Чары", diff: 15, desc: "Предотвращают трансгрессию из области и появление в ней." },
+            { name: "Апарекиум", type: "Чары", diff: 12, desc: "Раскрывает тайные послания невидимыми чернилами." },
+            { name: "Арресто моментум", type: "Чары", diff: 12, desc: "Замедляет движения цели или смягчает падение." },
+            { name: "Атмосферные чары", type: "Чары", diff: 12, desc: "Локализованные погодные чары в помещении." },
+            { name: "Баубиллиус", type: "Чары", diff: 12, desc: "Испускает белые искры (урон 3D+Сосредоточенность)." },
+            { name: "Бомбарда", type: "Чары", diff: 12, desc: "Создает пробоину в физической конструкции." },
+            { name: "Бомбарда Максима", type: "Чары", diff: 15, desc: "Создает большую пробоину в сооружении." },
+            { name: "Брахиам Эмендо", type: "Чары", diff: 18, desc: "Сращивает сломанные кости." },
+            { name: "Ваддивази", type: "Чары", diff: 12, desc: "Заставляет предмет лететь на высокой скорости (отвлечение)." },
+            { name: "Вердимилиус", type: "Чары", diff: 12, desc: "Испускает зелёные искры (урон 3D+Сосредоточенность)." },
+            { name: "Вермиллиус", type: "Чары", diff: 12, desc: "Испускает красные искры (урон 3D+Сосредоточенность)." },
+            { name: "Веселящие чары", type: "Чары", diff: 9, desc: "Заставляет цель чувствовать себя счастливой." },
+            { name: "Вингардиум Левиоса", type: "Чары", diff: 9, desc: "Левитационные чары для неодушевленных предметов." },
+            { name: "Випера Эванеско", type: "Трансфигурация", diff: 12, desc: "Заклинание изгнания змей." },
+            { name: "Воздвигнись", type: "Чары", diff: 12, desc: "Раскрывает и устанавливает палатку." },
+            { name: "Возрастная линия", type: "Чары", diff: 15, desc: "Не допускает людей определенного возраста." },
+            { name: "Волшебный огонь", type: "Чары", diff: 9, desc: "Вызывает безопасное голубое пламя." },
+            { name: "Воющие чары", type: "Чары", diff: 12, desc: "Предупреждают о входе в охраняемую зону визгом." },
+            { name: "Вспыхни", type: "Проклятие", diff: 15, desc: "Взрывающее заклятие (урон 6D+Сосредоточенность+30)." },
+            { name: "Вулнера Санентур", type: "Чары", diff: 18, desc: "Исцеляет серьёзные раны в три приема." },
+            { name: "Глиссео", type: "Чары", diff: 15, desc: "Делает поверхность идеально ровной (горкой)." },
+            { name: "Гоменум ревелио", type: "Чары", diff: 15, desc: "Проявляющие чары, раскрывающие присутствие людей." },
+            { name: "Гомункуловы чары", type: "Чары", diff: 15, desc: "Добавляют движущиеся точки на карту." },
+            { name: "Дантисимус", type: "Порча", diff: 12, desc: "Заставляет зубы цели быстро расти." },
+            { name: "Дезиллюминационное заклинание", type: "Чары", diff: 15, desc: "Чары хамелеона (неотличимость от обстановки)." },
+            { name: "Делетриүс", type: "Чары", diff: 12, desc: "Разрушает следы и эффекты некоторых заклинаний." },
+            { name: "Депримо", type: "Чары", diff: 15, desc: "Создает взрывом большие отверстия в земле." },
+            { name: "Депульсо", type: "Чары", diff: 12, desc: "Отталкивающие чары." },
+            { name: "Десцендо", type: "Чары", diff: 12, desc: "Заставляет объект двигаться вниз." },
+            { name: "Дефодио", type: "Чары", diff: 15, desc: "Чары долота для выкапывания каналов." },
+            { name: "Джеминио", type: "Чары", diff: 15, desc: "Заклятие Умножения (дублирует объект)." },
+            { name: "Диминуендо", type: "Чары", diff: 15, desc: "Уменьшает объекты." },
+            { name: "Диффиндо", type: "Чары", diff: 9, desc: "Режущее заклинание." },
+            { name: "Драконифорс", type: "Трансфигурация", diff: 12, desc: "Преобразует мелкие объекты в детёнышей драконов." },
+            { name: "Дуро", type: "Чары", diff: 12, desc: "Превращает объект в камень." },
+            { name: "Жалящее заклинание", type: "Сглаз", diff: 15, desc: "Вызывает болезненный красный рубец." },
+            { name: "Заговор Обмена", type: "Трансфигурация", diff: 15, desc: "Меняет местами любые два объекта." },
+            { name: "Заклинание вечного приклеивания", type: "Чары", diff: 12, desc: "Привязывает объект к другому намертво." },
+            { name: "Заклинание головного пузыря", type: "Чары", diff: 12, desc: "Создает пузырь воздуха для дыхания." },
+            { name: "Заклинание заметания следов", type: "Чары", diff: 9, desc: "Удаляет любые следы перемещения." },
+            { name: "Заклинание Обращения", type: "Чары", diff: 18, desc: "Временно возвращает оборотня в человеческую форму." },
+            { name: "Заклинание Подзаправки", type: "Чары", diff: 15, desc: "Наполняет контейнер прежним напитком." },
+            { name: "Заклинание Табу", type: "Проклятие", diff: 18, desc: "Обозначает слово как сигнал местоположения." },
+            { name: "Заклятие Недосягаемости", type: "Чары", diff: 15, desc: "Создает невидимый магический барьер." },
+            { name: "Заклятие Неразбиваемости", type: "Чары", diff: 15, desc: "Делает объект неразбиваемым." },
+            { name: "Заклятие против проникновения", type: "Сглаз", diff: 15, desc: "Предотвращает проникновение физическими средствами." },
+            { name: "Заклятие Пылающей руки", type: "Проклятие", diff: 15, desc: "Заставляет объекты обжигать при касании." },
+            { name: "Иммобулюс", type: "Чары", diff: 15, desc: "Обездвиживает и останавливает цели." },
+            { name: "Импедимента", type: "Сглаз", diff: 15, desc: "Чары Помех (жертва теряет два действия)." },
+            { name: "Импервиус", type: "Чары", diff: 9, desc: "Заставляет объект отталкивать воду и туман." },
+            { name: "Империо", type: "Проклятие", diff: 18, desc: "Помещает субъекта под полный контроль заклинателя." },
+            { name: "Инкарцеро", type: "Трансфигурация", diff: 21, desc: "Связывающее заклинание (путы, веревки)." },
+            { name: "Инсендио", type: "Трансфигурация", diff: 12, desc: "Чары воспламенения (струя пламени)." },
+            { name: "Инфлэтус", type: "Чары", diff: 12, desc: "Надувает создание словно воздушный шар." },
+            { name: "Каве инимикум", type: "Чары", diff: 15, desc: "Создает невидимый барьер, скрывающий заклинателя." },
+            { name: "Капациус Экстремис", type: "Чары", diff: 18, desc: "Увеличивает внутренние размеры контейнера." },
+            { name: "Карпе Ретрактум", type: "Чары", diff: 12, desc: "Творит шнур из света для притяжения или лазания." },
+            { name: "Квиетус", type: "Чары", diff: 12, desc: "Приглушает звуки (контрчары к Сонорус)." },
+            { name: "Коллопортус", type: "Чары", diff: 12, desc: "Запирающие чары (запечатывает двери)." },
+            { name: "Коловария", type: "Чары", diff: 12, desc: "Меняет цвет предмета или животного." },
+            { name: "Конфундус", type: "Чары", diff: 15, desc: "Чары замешательства и дезориентации." },
+            { name: "Коньюнктивитус", type: "Проклятие", diff: 15, desc: "Раздражает глаза противника, ухудшая зрение." },
+            { name: "Кринис Муто", type: "Трансфигурация", diff: 12, desc: "Меняет прическу и цвет волос." },
+            { name: "Круциатус", type: "Проклятие", diff: 18, desc: "Причиняет мучительную боль (Проклятие Пытки)." },
+            { name: "Левикорпус", type: "Сглаз", diff: 15, desc: "Подвешивает человека вниз головой за лодыжку." },
+            { name: "Легилименс", type: "Чары", diff: 18, desc: "Проникает в сознание, читая мысли и воспоминания." },
+            { name: "Летательные чары", type: "Чары", diff: 15, desc: "Заставляет летать мётлы, ковры и машины." },
+            { name: "Либеракорпус", type: "Контрсглаз", diff: 12, desc: "Противостоит сглазу Левикорпус." },
+            { name: "Локомотор", type: "Чары", diff: 9, desc: "Чары передвижения левитирующих предметов." },
+            { name: "Локомотор Мортис", type: "Проклятие", diff: 15, desc: "Склеивает вместе ноги жертвы." },
+            { name: "Люмос", type: "Чары", diff: 9, desc: "Заживляет огонёк света на конце палочки." },
+            { name: "Метео Реканто", type: "Чары", diff: 12, desc: "Отменяет погодные чары." },
+            { name: "Мимбл Вимбл", type: "Проклятие", diff: 12, desc: "Заклятие косноязычия, мешающее говорить." },
+            { name: "Мобилиарбус", type: "Чары", diff: 9, desc: "Перемещает деревянный объект." },
+            { name: "Мобиликорпус", type: "Чары", diff: 15, desc: "Перемещает тело по воздуху словно марионетку." },
+            { name: "Моллиар", type: "Чары", diff: 12, desc: "Амортизирующие чары для смягчения посадки." },
+            { name: "Мортмордре", type: "Проклятие", diff: 12, desc: "Создает Чёрную Метку в небе." },
+            { name: "Мукус Ад Нозем", type: "Проклятие", diff: 12, desc: "Вызывает сильный насморк и озноб." },
+            { name: "Непреложный обет", type: "Чары", diff: 18, desc: "Клятва, нарушение которой ведет к смерти." },
+            { name: "Ножное заклинание", type: "Сглаз", diff: 15, desc: "Заклинание ватных ног." },
+            { name: "Нокс", type: "Чары", diff: 12, desc: "Гасит свет палочки (контрчары Люмос)." },
+            { name: "Облегчающие чары", type: "Чары", diff: 12, desc: "Делает предмет лёгким, как пёрышко." },
+            { name: "Обливиэйт", type: "Чары", diff: 18, desc: "Чары памяти (стирает воспоминания)." },
+            { name: "Обскуро", type: "Трансфигурация", diff: 21, desc: "Создает на глазах повязку." },
+            { name: "Оглохни", type: "Чары", diff: 12, desc: "Вызывает жужжание в ушах окружающих." },
+            { name: "Оппуньо", type: "Сглаз", diff: 15, desc: "Направляет объекты или существ в атаку." },
+            { name: "Орхидеус", type: "Трансфигурация", diff: 21, desc: "Вызывает букет цветов из палочки." },
+            { name: "Остолбеней", type: "Чары", diff: 15, desc: "Оглушающее заклятие, лишающее сознания." },
+            { name: "Петрификус Тоталус", type: "Чары", diff: 15, desc: "Полное оцепенение тела." },
+            { name: "Пиертотум Локомотор", type: "Чары", diff: 18, desc: "Оживляет статуи и доспехи." },
+            { name: "Портус", type: "Чары", diff: 21, desc: "Превращает предмет в портключ." },
+            { name: "Приори Инкантатем", type: "Чары", diff: 15, desc: "Показывает отголосок последнего заклинания палочки." },
+            { name: "Протеевы чары", type: "Чары", diff: 18, desc: "Связывает несколько объектов для передачи информации." },
+            { name: "Протего", type: "Чары", diff: 15, desc: "Щитовые чары против заклинаний и атак." },
+            { name: "Протего Тоталүм", type: "Чары", diff: 18, desc: "Защитные чары области." },
+            { name: "Протего Хоррибилис", type: "Чары", diff: 21, desc: "Защита от Тёмных искусств." },
+            { name: "Ревелио", type: "Чары", diff: 15, desc: "Проявляющие чары." },
+            { name: "Редукто", type: "Проклятие", diff: 15, desc: "Разрушает твердые предметы." },
+            { name: "Редуцио", type: "Чары", diff: 12, desc: "Уменьшает увеличенные объекты." },
+            { name: "Релашио", type: "Чары", diff: 12, desc: "Заставляет цель отпустить то, за что она держится." },
+            { name: "Ренервейт", type: "Чары", diff: 12, desc: "Контрчары для оживления оглушенных." },
+            { name: "Репаро", type: "Чары", diff: 12, desc: "Чинит сломанные предметы." },
+            { name: "Репелло Иннимикум", type: "Чары", diff: 18, desc: "Отпугивает заклинателей и врагов." },
+            { name: "Репелло Маглетум", type: "Чары", diff: 15, desc: "Антимагловские чары." },
+            { name: "Ридикулус", type: "Чары", diff: 15, desc: "Превращает боггарта в смешной образ." },
+            { name: "Риктусемпра", type: "Чары", diff: 12, desc: "Щекочущее заклятие." },
+            { name: "Сальвио Гекенia", type: "Чары", diff: 15, desc: "Защитные чары от сглазов." },
+            { name: "Сглаз метлы", type: "Сглаз", diff: 12, desc: "Нарушает управление метлой." },
+            { name: "Сектумсемпра", type: "Проклятие", diff: 18, desc: "Наносит глубокие резаные раны." },
+            { name: "Серпенсортия", type: "Чары", diff: 21, desc: "Вызывает змею из кончика палочки." },
+            { name: "Силенцио", type: "Чары", diff: 15, desc: "Лишает цель возможности издавать звуки." },
+            { name: "Систем Аперио", type: "Чары", diff: 9, desc: "Разрывает замки и сундуки." },
+            { name: "Слагulus Эрукто", type: "Проклятие", diff: 12, desc: "Заставляет жертву изрыгать слизней." },
+            { name: "Сонорус", type: "Чары", diff: 12, desc: "Усиливает громкость голоса." },
+            { name: "Спанджифай", type: "Чары", diff: 12, desc: "Делает поверхность упругой (батут)." },
+            { name: "Специалис Ревелио", type: "Чары", diff: 15, desc: "Показывает скрытые чары и зелья." },
+            { name: "Спотыкающийся сглаз", type: "Сглаз", diff: 12, desc: "Заставляет цель спотыкаться." },
+            { name: "Таранталлегра", type: "Сглаз", diff: 15, desc: "Заставляет ноги танцевать против воли." },
+            { name: "Тергео", type: "Чары", diff: 12, desc: "Удаляет жидкость или грязь с поверхности." },
+            { name: "Трансгрессия", type: "Телепортация", diff: 18, desc: "Мгновенное перемещение в пространстве." },
+            { name: "Упаковывающие чары", type: "Чары", diff: 9, desc: "Магически упаковывает вещи в чемодан." },
+            { name: "Фера Верто", type: "Трансфигурация", diff: 12, desc: "Превращает животных в кубки." },
+            { name: "Ферула", type: "Чары", diff: 21, desc: "Создает шины и бинты для переломов." },
+            { name: "Фианто Дури", type: "Чары", diff: 18, desc: "Укрепляет защитные чары." },
+            { name: "Фиделиус", type: "Чары", diff: 18, desc: "Прячет тайну внутри души Хранителя." },
+            { name: "Фините Инкантатем", type: "Чары", diff: 15, desc: "Массовое контрзаклинание." },
+            { name: "Финнифорс", type: "Трансфигурация", diff: 12, desc: "Превращает небольшие предметы в пингвинов." },
+            { name: "Флагрейт", type: "Чары", diff: 9, desc: "Оставляет огненные метки." },
+            { name: "Флиппендо", type: "Чары", diff: 12, desc: "Отталкивает противников или предметы." },
+            { name: "Фурункулюс", type: "Сглаз", diff: 12, desc: "Покрывает кожу фурункулами." },
+            { name: "Чары горячего воздуха", type: "Чары", diff: 9, desc: "Выдувает струю горячего воздуха." },
+            { name: "Чары заморозки огня", type: "Чары", diff: 12, desc: "Делает огонь безопасным и приятным." },
+            { name: "Чары ложной памяти", type: "Чары", diff: 21, desc: "Внедряет ложные воспоминания." },
+            { name: "Чары осушения", type: "Чары", diff: 12, desc: "Осушает водоёмы и лужи." },
+            { name: "Чары тушения огня", type: "Чары", diff: 9, desc: "Тушит открытое пламя." },
+            { name: "Эванеско", type: "Трансфигурация", diff: 18, desc: "Исчезновение объектов." },
+            { name: "Эверте Статум", type: "Чары", diff: 12, desc: "Отбрасывает цель с сильным ударом." },
+            { name: "Эспекто патронум", type: "Чары", diff: 21, desc: "Создает защитного Патронуса от дементоров." },
+            { name: "Экспеллиармус", type: "Чары", diff: 12, desc: "Обезоруживающее заклинание." },
+            { name: "Экспульсо", type: "Проклятие", diff: 15, desc: "Взрывная волна, отбрасывающая цель." },
+            { name: "Эскуро", type: "Чары", diff: 12, desc: "Очищает испачканные предметы." },
+            { name: "Энгоргио", type: "Чары", diff: 12, desc: "Увеличивает объект в размерах." },
+            { name: "Эпискен", type: "Чары", diff: 12, desc: "Быстро залечивает мелкие переломы (например, нос)." }
         ];
 
-        // Все зелья из официальных карточек
         const POTIONS_DB = [
-            { name: "Амортенция", type: "Зелье", diff: 15, desc: "Сильнейшее любовное зелье (эффект 24–48 часов)[cite: 624]." },
-            { name: "Анимагическое зелье", type: "Зелье", diff: 18, desc: "Часть ритуала для превращения в животное[cite: 625]." },
-            { name: "Антидот против Сыворотки правды", type: "Зелье", diff: 18, desc: "Противоядие от Сыворотки правды[cite: 626]." },
-            { name: "Бодроперцовое зелье", type: "Зелье", diff: 9, desc: "Резко согревает и лечит простуду[cite: 627]." },
-            { name: "Болтушка для молчунов", type: "Зелье", diff: 9, desc: "Заставляет болтать без устали[cite: 628]." },
-            { name: "Волчье противоядие", type: "Зелье", diff: 18, desc: "Снимает симптомы ликантропии, сохраняя разум[cite: 629]." },
-            { name: "Дурманящая настойка", type: "Зелье", diff: 9, desc: "Вызывает головокружение и самоуверенность[cite: 630]." },
-            { name: "Дыбоволосное зелье", type: "Зелье", diff: 12, desc: "Поднимает волосы дыбом[cite: 631]." },
-            { name: "Животворящий эликсир", type: "Зелье", diff: 12, desc: "Снимает всю усталость на 8–12 часов[cite: 632]." },
-            { name: "Зелье излечения фурункулов и прыщей", type: "Зелье", diff: 9, desc: "Очищает кожу от прыщей и фурункулов[cite: 633]." },
-            { name: "Зелье Забывчивости", type: "Зелье", diff: 9, desc: "Вызывает трудности с запоминанием информации[cite: 634]." },
-            { name: "Зелье Старения", type: "Зелье", diff: 15, desc: "Временно увеличивает возраст принявшего[cite: 635]." },
-            { name: "Костерост", type: "Зелье", diff: 12, desc: "Сращивает и восстанавливает кости[cite: 636]." },
-            { name: "Крововосполняющее зелье", type: "Зелье", diff: 12, desc: "Восполняет кровопотерю и снижает урон на круг[cite: 637]." },
-            { name: "Морочащая закваска", type: "Зелье", diff: 9, desc: "Вводит в замешательство, заставляя бормотать[cite: 638]." },
-            { name: "Напиток живой смерти", type: "Зелье", diff: 18, desc: "Снотворное, погружающее в анабиоз[cite: 639]." },
-            { name: "Настойка растопырника", type: "Зелье", diff: 9, desc: "Заживляет порезы и ссадины[cite: 640]." },
-            { name: "Оборотное Зелье", type: "Зелье", diff: 15, desc: "Позволяет принять форму другого человека[cite: 641]." },
-            { name: "Огнезащитное зелье (Ледяное зелье)", type: "Зелье", diff: 9, desc: "Защищает от огня и магического пламени[cite: 642]." },
-            { name: "Противоожоговая мазь", type: "Зелье", diff: 12, desc: "Паста для быстрого залечивания ожогов[cite: 643]." },
-            { name: "Противоядие от любовных зелий", type: "Зелье", diff: 15, desc: "Останавливает действие любовного зелья[cite: 644]." },
-            { name: "Раздувающий раствор", type: "Зелье", diff: 9, desc: "Увеличивает всё, к чему прикасается[cite: 645]." },
-            { name: "Ранозаживляющее Зелье", type: "Зелье", diff: 15, desc: "Устраняет инфекции и ускоряет заживление[cite: 646]." },
-            { name: "Сдувающий напиток", type: "Зелье", diff: 9, desc: "Возвращает раздутые объекты к нормальному размеру[cite: 647]." },
-            { name: "Сыворотка правды", type: "Зелье", diff: 18, desc: "Не позволяет умолчать правду[cite: 648]." },
-            { name: "Тонизирующий глоток мандрагоры", type: "Зелье", diff: 12, desc: "Лечит окаменение и снимает проклятия[cite: 649]." },
-            { name: "Укрепляющий раствор", type: "Зелье", diff: 12, desc: "Дает огромную силу (+5 к Живучести)[cite: 650]." },
-            { name: "Уменьшающее зелье", type: "Зелье", diff: 15, desc: "Уменьшает физические размеры и омолаживает[cite: 651]." },
-            { name: "Умиротворяющий бальзам", type: "Зелье", diff: 15, desc: "Успокаивает нервы и тревоги[cite: 652]." },
-            { name: "Умострильное зелье", type: "Зелье", diff: 12, desc: "Позволяет думать ясно (+3 к Сообразительности)[cite: 653]." },
-            { name: "Успокаивающая настойка", type: "Зелье", diff: 15, desc: "Снимает эмоциональный шок и ужас[cite: 654]." },
-            { name: "Усыпляющее зелье", type: "Зелье", diff: 15, desc: "Погружает в глубокий кратковременный сон[cite: 655]." },
-            { name: "Феликс Фелицис (Жидкая Удача)", type: "Зелье", diff: 18, desc: "Обеспечивает успех в любых начинаниях[cite: 656]." },
-            { name: "Эйфорийный эликсир", type: "Зелье", diff: 15, desc: "Вызывает иррациональную радость и веселье[cite: 657]." }
+            { name: "Амортенция", type: "Зелье", diff: 15, desc: "Сильнейшее любовное зелье (эффект 24–48 часов)." },
+            { name: "Анимагическое зелье", type: "Зелье", diff: 18, desc: "Часть ритуала для превращения в животное." },
+            { name: "Антидот против Сыворотки правды", type: "Зелье", diff: 18, desc: "Противоядие от Сыворотки правды." },
+            { name: "Бодроперцовое зелье", type: "Зелье", diff: 9, desc: "Резко согревает и лечит простуду." },
+            { name: "Болтушка для молчунов", type: "Зелье", diff: 9, desc: "Заставляет болтать без устали." },
+            { name: "Волчье противоядие", type: "Зелье", diff: 18, desc: "Снимает симптомы ликантропии, сохраняя разум." },
+            { name: "Дурманящая настойка", type: "Зелье", diff: 9, desc: "Вызывает головокружение и самоуверенность." },
+            { name: "Дыбоволосное зелье", type: "Зелье", diff: 12, desc: "Поднимает волосы дыбом." },
+            { name: "Животворящий эликсир", type: "Зелье", diff: 12, desc: "Снимает всю усталость на 8–12 часов." },
+            { name: "Зелье излечения фурункулов и прыщей", type: "Зелье", diff: 9, desc: "Очищает кожу от прыщей и фурункулов." },
+            { name: "Зелье Забывчивости", type: "Зелье", diff: 9, desc: "Вызывает трудности с запоминанием информации." },
+            { name: "Зелье Старения", type: "Зелье", diff: 15, desc: "Временно увеличивает возраст принявшего." },
+            { name: "Костерост", type: "Зелье", diff: 12, desc: "Сращивает и восстанавливает кости." },
+            { name: "Крововосполняющее зелье", type: "Зелье", diff: 12, desc: "Восполняет кровопотерю и снижает урон на круг." },
+            { name: "Морочащая закваска", type: "Зелье", diff: 9, desc: "Вводит в замешательство, заставляя бормотать." },
+            { name: "Напиток живой смерти", type: "Зелье", diff: 18, desc: "Снотворное, погружающее в анабиоз." },
+            { name: "Настойка растопырника", type: "Зелье", diff: 9, desc: "Заживляет порезы и ссадины." },
+            { name: "Оборотное Зелье", type: "Зелье", diff: 15, desc: "Позволяет принять форму другого человека." },
+            { name: "Огнезащитное зелье (Ледяное зелье)", type: "Зелье", diff: 9, desc: "Защищает от огня и магического пламени." },
+            { name: "Противоожоговая мазь", type: "Зелье", diff: 12, desc: "Паста для быстрого залечивания ожогов." },
+            { name: "Противоядие от любовных зелий", type: "Зелье", diff: 15, desc: "Останавливает действие любовного зелья." },
+            { name: "Раздувающий раствор", type: "Зелье", diff: 9, desc: "Увеличивает всё, к чему прикасается." },
+            { name: "Ранозаживляющее Зелье", type: "Зелье", diff: 15, desc: "Устраняет инфекции и ускоряет заживление." },
+            { name: "Сдувающий напиток", type: "Зелье", diff: 9, desc: "Возвращает раздутые объекты к нормальному размеру." },
+            { name: "Сыворотка правды", type: "Зелье", diff: 18, desc: "Не позволяет умолчать правду." },
+            { name: "Тонизирующий глоток мандрагоры", type: "Зелье", diff: 12, desc: "Лечит окаменение и снимает проклятия." },
+            { name: "Укрепляющий раствор", type: "Зелье", diff: 12, desc: "Дает огромную силу (+5 к Живучести)." },
+            { name: "Уменьшающее зелье", type: "Зелье", diff: 15, desc: "Уменьшает физические размеры и омолаживает." },
+            { name: "Умиротворяющий бальзам", type: "Зелье", diff: 15, desc: "Успокаивает нервы и тревоги." },
+            { name: "Умострильное зелье", type: "Зелье", diff: 12, desc: "Позволяет думать ясно (+3 к Сообразительности)." },
+            { name: "Успокаивающая настойка", type: "Зелье", diff: 15, desc: "Снимает эмоциональный шок и ужас." },
+            { name: "Усыпляющее зелье", type: "Зелье", diff: 15, desc: "Погружает в глубокий кратковременный сон." },
+            { name: "Феликс Фелицис (Жидкая Удача)", type: "Зелье", diff: 18, desc: "Обеспечивает успех в любых начинаниях." },
+            { name: "Эйфорийный эликсир", type: "Зелье", diff: 15, desc: "Вызывает иррациональную радость и веселье." }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('kpms_username');
-            if (savedName) document.getElementById('usernameInput').value = savedName;
+            if (savedName && document.getElementById('usernameInput')) {
+                document.getElementById('usernameInput').value = savedName;
+            }
             renderSkillsGrid();
             renderSpellsAndPotionsModals();
         });
 
         function renderSpellsAndPotionsModals() {
             const spellsContainer = document.getElementById('spellsListContainer');
-            spellsContainer.innerHTML = SPELLS_DB.map(s => `
-                <div onclick="rollMagicAction('Заклинание', '${s.name}', ${s.diff})" class="clickable-stat p-2.5 bg-[#fcf8f2] border border-[#5c4735]/30 rounded-lg text-xs space-y-1">
-                    <div class="flex justify-between items-center font-bold text-[#3b2a1a]">
-                        <span>🪄 ${s.name}</span>
-                        <span class="text-[10px] bg-[#d3c4b1] px-1.5 py-0.5 rounded text-[#5c4735]">${s.type} | Сложность: ${s.diff}</span>
+            if (spellsContainer) {
+                spellsContainer.innerHTML = SPELLS_DB.map(s => `
+                    <div onclick="rollMagicAction('Заклинание', '${s.name}', ${s.diff})" class="clickable-stat p-2.5 bg-[#fcf8f2] border border-[#5c4735]/30 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between items-center font-bold text-[#3b2a1a]">
+                            <span>🪄 ${s.name}</span>
+                            <span class="text-[10px] bg-[#d3c4b1] px-1.5 py-0.5 rounded text-[#5c4735]">${s.type} | Сложность: ${s.diff}</span>
+                        </div>
+                        <p class="text-[11px] text-[#5c4735]">${s.desc}</p>
                     </div>
-                    <p class="text-[11px] text-[#5c4735]">${s.desc}</p>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             const potionsContainer = document.getElementById('potionsListContainer');
-            potionsContainer.innerHTML = POTIONS_DB.map(p => `
-                <div onclick="rollMagicAction('Зелье', '${p.name}', ${p.diff})" class="clickable-stat p-2.5 bg-[#fcf8f2] border border-[#5c4735]/30 rounded-lg text-xs space-y-1">
-                    <div class="flex justify-between items-center font-bold text-[#3b2a1a]">
-                        <span>🧪 ${p.name}</span>
-                        <span class="text-[10px] bg-[#d3c4b1] px-1.5 py-0.5 rounded text-[#5c4735]">Сложность: ${p.diff}</span>
+            if (potionsContainer) {
+                potionsContainer.innerHTML = POTIONS_DB.map(p => `
+                    <div onclick="rollMagicAction('Зелье', '${p.name}', ${p.diff})" class="clickable-stat p-2.5 bg-[#fcf8f2] border border-[#5c4735]/30 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between items-center font-bold text-[#3b2a1a]">
+                            <span>🧪 ${p.name}</span>
+                            <span class="text-[10px] bg-[#d3c4b1] px-1.5 py-0.5 rounded text-[#5c4735]">Сложность: ${p.diff}</span>
+                        </div>
+                        <p class="text-[11px] text-[#5c4735]">${p.desc}</p>
                     </div>
-                    <p class="text-[11px] text-[#5c4735]">${p.desc}</p>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
 
         function rollMagicAction(type, name, targetDiff) {
@@ -599,9 +607,9 @@
             container.innerHTML = SKILLS_LIST.map((skill, index) => {
                 const id = `sk_${index}`;
                 return `
-                    <div onclick="rollSkill('${skill}', '${id}')" class="clickable-stat flex items-center justify-between p-1 bg-[#fcf8f2] border border-[#5c4735]/20 rounded text-[10px]" title="Кликните для автоброска!">
+                    <div onclick="rollSkill('${skill}', '${id}')" class="clickable-stat flex items-center justify-between p-1.5 bg-[#fcf8f2] border border-[#5c4735]/20 rounded text-xs" title="Кликните для автоброска!">
                         <span class="truncate pr-1 font-medium">${skill}</span>
-                        <input type="number" id="${id}" value="0" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-8 h-5 text-center parchment-input rounded font-bold text-[10px]">
+                        <input type="number" id="${id}" value="0" oninput="saveCharacterSheet()" onclick="event.stopPropagation()" class="w-9 h-6 text-center parchment-input rounded font-bold text-xs">
                     </div>
                 `;
             }).join('');
@@ -801,8 +809,13 @@
             document.getElementById('imageModal').classList.add('hidden');
         }
 
+        function getVal(id, defaultVal = '') {
+            const el = document.getElementById(id);
+            return el ? el.value : defaultVal;
+        }
+
         function rollStat(statName, elementId) {
-            const statVal = parseInt(document.getElementById(elementId).value) || 0;
+            const statVal = parseInt(getVal(elementId, '0')) || 0;
             const d1 = Math.floor(Math.random() * 6) + 1;
             const d2 = Math.floor(Math.random() * 6) + 1;
             const sum = d1 + d2 + statVal;
@@ -823,7 +836,7 @@
         }
 
         function rollSkill(skillName, elementId) {
-            const skillVal = parseInt(document.getElementById(elementId).value) || 0;
+            const skillVal = parseInt(getVal(elementId, '0')) || 0;
             const d1 = Math.floor(Math.random() * 6) + 1;
             const d2 = Math.floor(Math.random() * 6) + 1;
             const sum = d1 + d2 + skillVal;
@@ -863,7 +876,8 @@
 
         function changeStoryPoints(val) {
             storyPoints = Math.max(0, storyPoints + val);
-            document.getElementById('storyPointsDisplay').innerText = storyPoints;
+            const spDisplay = document.getElementById('storyPointsDisplay');
+            if (spDisplay) spDisplay.innerText = storyPoints;
             saveCharacterSheet();
         }
 
@@ -927,27 +941,27 @@
             });
 
             const sheet = {
-                name: document.getElementById('c_name').value,
-                house: document.getElementById('c_house').value,
-                school: document.getElementById('c_school').value,
-                year: document.getElementById('c_year').value,
-                job: document.getElementById('c_job').value,
-                origin: document.getElementById('c_origin').value,
-                fam: document.getElementById('c_fam').value,
-                wood: document.getElementById('c_wood').value,
-                length: document.getElementById('c_length').value,
-                core: document.getElementById('c_core').value,
-                live: document.getElementById('st_live').value,
-                speed: document.getElementById('st_speed').value,
-                smart: document.getElementById('st_smart').value,
-                focus: document.getElementById('st_focus').value,
-                flex: document.getElementById('st_flex').value,
-                hard: document.getElementById('st_hard').value,
+                name: getVal('c_name'),
+                house: getVal('c_house', 'Гриффиндор'),
+                school: getVal('c_school', 'Хогвартс'),
+                year: getVal('c_year', '5'),
+                job: getVal('c_job'),
+                origin: getVal('c_origin'),
+                fam: getVal('c_fam'),
+                wood: getVal('c_wood'),
+                length: getVal('c_length'),
+                core: getVal('c_core'),
+                live: getVal('st_live', '3'),
+                speed: getVal('st_speed', '3'),
+                smart: getVal('st_smart', '3'),
+                focus: getVal('st_focus', '3'),
+                flex: getVal('st_flex', '3'),
+                hard: getVal('st_hard', '3'),
                 skills: skillsData,
                 storyPoints: storyPoints,
-                beliefs: document.getElementById('c_beliefs').value,
-                goals: document.getElementById('c_goals').value,
-                inventory: document.getElementById('c_inventory').value
+                beliefs: getVal('c_beliefs'),
+                goals: getVal('c_goals'),
+                inventory: getVal('c_inventory')
             };
             localStorage.setItem(`kpms_sheet_${currentUser.name}`, JSON.stringify(sheet));
             if (socket && socket.connected) {
@@ -964,26 +978,26 @@
 
             const sheet = {
                 name: playerName,
-                house: document.getElementById(`m_house_${playerName}`).value,
-                school: document.getElementById(`m_school_${playerName}`).value,
-                year: document.getElementById(`m_year_${playerName}`).value,
-                job: document.getElementById(`m_job_${playerName}`).value,
-                origin: document.getElementById(`m_origin_${playerName}`).value,
-                fam: document.getElementById(`m_fam_${playerName}`).value,
-                wood: document.getElementById(`m_wood_${playerName}`).value,
-                length: document.getElementById(`m_length_${playerName}`).value,
-                core: document.getElementById(`m_core_${playerName}`).value,
-                live: document.getElementById(`m_live_${playerName}`).value,
-                speed: document.getElementById(`m_speed_${playerName}`).value,
-                smart: document.getElementById(`m_smart_${playerName}`).value,
-                focus: document.getElementById(`m_focus_${playerName}`).value,
-                flex: document.getElementById(`m_flex_${playerName}`).value,
-                hard: document.getElementById(`m_hard_${playerName}`).value,
+                house: getVal(`m_house_${playerName}`),
+                school: getVal(`m_school_${playerName}`, 'Хогвартс'),
+                year: getVal(`m_year_${playerName}`),
+                job: getVal(`m_job_${playerName}`),
+                origin: getVal(`m_origin_${playerName}`),
+                fam: getVal(`m_fam_${playerName}`),
+                wood: getVal(`m_wood_${playerName}`),
+                length: getVal(`m_length_${playerName}`),
+                core: getVal(`m_core_${playerName}`),
+                live: getVal(`m_live_${playerName}`, '3'),
+                speed: getVal(`m_speed_${playerName}`, '3'),
+                smart: getVal(`m_smart_${playerName}`, '3'),
+                focus: getVal(`m_focus_${playerName}`, '3'),
+                flex: getVal(`m_flex_${playerName}`, '3'),
+                hard: getVal(`m_hard_${playerName}`, '3'),
                 skills: skillsData,
-                storyPoints: parseInt(document.getElementById(`m_sp_${playerName}`).innerText) || 0,
-                beliefs: document.getElementById(`m_beliefs_${playerName}`).value,
-                goals: document.getElementById(`m_goals_${playerName}`).value,
-                inventory: document.getElementById(`m_inventory_${playerName}`).value
+                storyPoints: parseInt(document.getElementById(`m_sp_${playerName}`)?.innerText) || 0,
+                beliefs: getVal(`m_beliefs_${playerName}`),
+                goals: getVal(`m_goals_${playerName}`),
+                inventory: getVal(`m_inventory_${playerName}`)
             };
 
             gameState.sheets[playerName] = sheet;
@@ -994,14 +1008,15 @@
 
         function changeMasterStoryPoints(playerName, val) {
             const spEl = document.getElementById(`m_sp_${playerName}`);
-            let current = parseInt(spEl.innerText) || 0;
+            let current = parseInt(spEl?.innerText) || 0;
             current = Math.max(0, current + val);
-            spEl.innerText = current;
+            if (spEl) spEl.innerText = current;
             saveCharacterSheetByMaster(playerName);
         }
 
         function loadPlayerSheetLocal() {
-            document.getElementById('c_name').value = currentUser.name;
+            const nameEl = document.getElementById('c_name');
+            if (nameEl) nameEl.value = currentUser.name;
             const saved = localStorage.getItem(`kpms_sheet_${currentUser.name}`);
             if (saved) {
                 try { applySheetToUI(JSON.parse(saved)); } catch(e) {}
@@ -1009,37 +1024,42 @@
             saveCharacterSheet();
         }
 
+        function setVal(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+        }
+
         function applySheetToUI(sheet) {
-            document.getElementById('c_house').value = sheet.house || 'Гриффиндор';
-            document.getElementById('c_school').value = sheet.school || 'Хогвартс';
-            document.getElementById('c_year').value = sheet.year || '5';
-            document.getElementById('c_job').value = sheet.job || '';
-            document.getElementById('c_origin').value = sheet.origin || '';
-            document.getElementById('c_fam').value = sheet.fam || '';
-            document.getElementById('c_wood').value = sheet.wood || '';
-            document.getElementById('c_length').value = sheet.length || '';
-            document.getElementById('c_core').value = sheet.core || '';
-            document.getElementById('st_live').value = sheet.live || '3';
-            document.getElementById('st_speed').value = sheet.speed || '3';
-            document.getElementById('st_smart').value = sheet.smart || '3';
-            document.getElementById('st_focus').value = sheet.focus || '3';
-            document.getElementById('st_flex').value = sheet.flex || '3';
-            document.getElementById('st_hard').value = sheet.hard || '3';
+            setVal('c_house', sheet.house || 'Гриффиндор');
+            setVal('c_school', sheet.school || 'Хогвартс');
+            setVal('c_year', sheet.year || '5');
+            setVal('c_job', sheet.job || '');
+            setVal('c_origin', sheet.origin || '');
+            setVal('c_fam', sheet.fam || '');
+            setVal('c_wood', sheet.wood || '');
+            setVal('c_length', sheet.length || '');
+            setVal('c_core', sheet.core || '');
+            setVal('st_live', sheet.live || '3');
+            setVal('st_speed', sheet.speed || '3');
+            setVal('st_smart', sheet.smart || '3');
+            setVal('st_focus', sheet.focus || '3');
+            setVal('st_flex', sheet.flex || '3');
+            setVal('st_hard', sheet.hard || '3');
             
             if (sheet.skills) {
                 Object.keys(sheet.skills).forEach(k => {
-                    const el = document.getElementById(k);
-                    if (el) el.value = sheet.skills[k];
+                    setVal(k, sheet.skills[k]);
                 });
             }
             if (sheet.storyPoints !== undefined) {
                 storyPoints = sheet.storyPoints;
-                document.getElementById('storyPointsDisplay').innerText = storyPoints;
+                const spDisplay = document.getElementById('storyPointsDisplay');
+                if (spDisplay) spDisplay.innerText = storyPoints;
             }
 
-            document.getElementById('c_beliefs').value = sheet.beliefs || '';
-            document.getElementById('c_goals').value = sheet.goals || '';
-            document.getElementById('c_inventory').value = sheet.inventory || '';
+            setVal('c_beliefs', sheet.beliefs || '');
+            setVal('c_goals', sheet.goals || '');
+            setVal('c_inventory', sheet.inventory || '');
         }
 
         function renderAllSheetsMaster() {
