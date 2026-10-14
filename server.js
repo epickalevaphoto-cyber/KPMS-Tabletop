@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
@@ -9,8 +10,27 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Состояние комнат на сервере
-const roomsState = {};
+const DATA_FILE = path.join(__dirname, 'rooms.json');
+
+// Загрузка сохраненных данных при старте сервера
+let roomsState = {};
+try {
+    if (fs.existsSync(DATA_FILE)) {
+        roomsState = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        console.log('Данные комнат успешно загружены с диска.');
+    }
+} catch (e) {
+    console.error('Ошибка при чтении файла данных:', e);
+}
+
+// Функция автоматического сохранения на диск
+function saveState() {
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(roomsState, null, 2), 'utf8');
+    } catch (e) {
+        console.error('Ошибка при сохранении данных на диск:', e);
+    }
+}
 
 io.on('connection', (socket) => {
     socket.on('join_room', ({ room, name, role }) => {
@@ -18,17 +38,16 @@ io.on('connection', (socket) => {
         socket.room = room;
         socket.userName = name;
 
-        // Если комната создается впервые — создаем ЕЁ С ЧИСТОЙ КАРТОЙ (без начальных токенов)
         if (!roomsState[room]) {
             roomsState[room] = {
                 mapImage: '',
-                tokens: [], // ← ТЕПЕРЬ ТУТ ПУСТО! Никаких Артура и Эвиты по умолчанию
+                tokens: [],
                 sheets: {},
                 events: []
             };
+            saveState();
         }
 
-        // Автоматически создаем токен для подключившегося игрока (если он не Мастер)
         if (role === 'player' && name) {
             const hasToken = roomsState[room].tokens.some(t => t.id === `user_${name}`);
             if (!hasToken) {
@@ -38,16 +57,17 @@ io.on('connection', (socket) => {
                     x: 20 + Math.floor(Math.random() * 60),
                     y: 20 + Math.floor(Math.random() * 60)
                 });
+                saveState();
             }
         }
 
-        // Отправляем текущее состояние подключившемуся клиенту
         socket.emit('state_sync', roomsState[room]);
     });
 
     socket.on('chat_message', ({ room, message }) => {
         if (roomsState[room]) {
             roomsState[room].events.push(message);
+            saveState();
             io.to(room).emit('chat_message', message);
         }
     });
@@ -55,6 +75,7 @@ io.on('connection', (socket) => {
     socket.on('update_tokens', ({ room, tokens }) => {
         if (roomsState[room]) {
             roomsState[room].tokens = tokens;
+            saveState();
             io.to(room).emit('state_sync', roomsState[room]);
         }
     });
@@ -62,6 +83,7 @@ io.on('connection', (socket) => {
     socket.on('update_map', ({ room, mapImage }) => {
         if (roomsState[room]) {
             roomsState[room].mapImage = mapImage;
+            saveState();
             io.to(room).emit('state_sync', roomsState[room]);
         }
     });
@@ -69,6 +91,7 @@ io.on('connection', (socket) => {
     socket.on('update_sheet', ({ room, name, sheet }) => {
         if (roomsState[room]) {
             roomsState[room].sheets[name] = sheet;
+            saveState();
             io.to(room).emit('sheet_updated', { name, sheet });
         }
     });
