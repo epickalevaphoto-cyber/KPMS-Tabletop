@@ -533,41 +533,102 @@
 
         function initSocket() {
             socket = io();
+
             socket.on('connect', () => {
                 updateConnectionStatus(true);
-                socket.emit('join_room', { room: currentUser.room, name: currentUser.name, role: currentUser.role });
-                if (currentUser.role === 'player') {
-                    saveCharacterSheet();
-                }
+                socket.emit('join_room', {
+                    room: currentUser.room,
+                    name: currentUser.name,
+                    role: currentUser.role
+                });
             });
+
             socket.on('disconnect', () => updateConnectionStatus(false));
+
             socket.on('state_sync', (state) => {
-                gameState = state;
+                gameState = state || { mapImage: '', tokens: [], sheets: {}, events: [] };
+                gameState.sheets = gameState.sheets || {};
+                gameState.tokens = Array.isArray(gameState.tokens) ? gameState.tokens : [];
+                gameState.events = Array.isArray(gameState.events) ? gameState.events : [];
+
                 renderMap();
                 renderChat();
-                if (currentUser.role === 'player' && gameState.sheets && gameState.sheets[currentUser.name]) {
-                    applySheetToUI(gameState.sheets[currentUser.name]);
+
+                if (currentUser.role === 'player') {
+                    const serverSheet = gameState.sheets[currentUser.name];
+                    if (serverSheet) {
+                        // The server is the source of truth when this character exists there.
+                        applySheetToUI(serverSheet);
+                        localStorage.setItem(
+                            `kpms_sheet_${currentUser.name}`,
+                            JSON.stringify(serverSheet)
+                        );
+                    } else {
+                        // Only migrate a local sheet after the server has confirmed that
+                        // no sheet exists. Never upload the initial empty form on connect.
+                        const saved = localStorage.getItem(`kpms_sheet_${currentUser.name}`);
+                        if (saved) {
+                            try {
+                                const localSheet = JSON.parse(saved);
+                                if (localSheet && typeof localSheet === 'object') {
+                                    applySheetToUI(localSheet);
+                                    saveCharacterSheet();
+                                }
+                            } catch (error) {
+                                console.warn('Не удалось прочитать локальный чарлист:', error);
+                            }
+                        }
+                    }
                 }
+
                 if (currentUser.role === 'master') {
                     renderMasterEvents();
-                    if (!document.getElementById('masterAllSheetsContainer').classList.contains('hidden')) {
+                    const container = document.getElementById('masterAllSheetsContainer');
+                    if (container && !container.classList.contains('hidden')) {
                         renderAllSheetsMaster();
                     }
                 }
             });
-            socket.on('chat_message', (msg) => {
-                gameState.events.push(msg);
+
+            socket.on('chat_message', (message) => {
+                if (!Array.isArray(gameState.events)) gameState.events = [];
+                gameState.events.push(message);
                 renderChat();
                 if (currentUser.role === 'master') renderMasterEvents();
             });
+
             socket.on('sheet_updated', (data) => {
+                if (!data || !data.name || !data.sheet) return;
+                if (!gameState.sheets) gameState.sheets = {};
                 gameState.sheets[data.name] = data.sheet;
+
                 if (currentUser.role === 'player' && data.name === currentUser.name) {
                     applySheetToUI(data.sheet);
+                    localStorage.setItem(
+                        `kpms_sheet_${currentUser.name}`,
+                        JSON.stringify(data.sheet)
+                    );
                 }
-                if (currentUser.role === 'master' && !document.getElementById('masterAllSheetsContainer').classList.contains('hidden')) {
-                    renderAllSheetsMaster();
+
+                if (currentUser.role === 'master') {
+                    const container = document.getElementById('masterAllSheetsContainer');
+                    if (container && !container.classList.contains('hidden')) {
+                        renderAllSheetsMaster();
+                    }
                 }
+            });
+
+            socket.on('sheet_save_status', (status) => {
+                if (!status) return;
+                if (status.ok) {
+                    console.info(`Чарлист «${status.name}» сохранён в Google Sheets.`);
+                } else {
+                    console.warn(status.message || `Не удалось сохранить чарлист «${status.name}».`);
+                }
+            });
+
+            socket.on('app_error', (data) => {
+                console.error('Ошибка сервера:', data && data.message ? data.message : data);
             });
         }
 
@@ -853,7 +914,8 @@
             const nameEl = document.getElementById('c_name');
             if (nameEl) nameEl.value = currentUser.name;
             
-            // Проверяем, есть ли данные с сервера в gameState, иначе из localStorage
+            // До получения state_sync показываем локальную копию, но не отправляем её на сервер.
+            // Это предотвращает перезапись более свежего серверного чарлиста при входе.
             if (gameState.sheets && gameState.sheets[currentUser.name]) {
                 applySheetToUI(gameState.sheets[currentUser.name]);
             } else {
@@ -862,7 +924,6 @@
                     try { applySheetToUI(JSON.parse(saved)); } catch(e) {}
                 }
             }
-            saveCharacterSheet();
         }
 
         function setVal(id, val) {
